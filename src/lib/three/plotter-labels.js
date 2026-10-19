@@ -1,4 +1,3 @@
-// Ported from samfcheng.com (chunk C65Q8xQL.js).
 import {
   OrthographicCamera as t,
   SRGBColorSpace as n,

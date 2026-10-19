@@ -1,8 +1,8 @@
 <script>
   let {
-    title = 'Sam Cheng',
-    description = 'Sam Cheng is a designer & founder building impactful products with innovative design.',
-    image = 'https://www.samfcheng.com/card.png'
+    title = 'Talal Aamir',
+    description = 'I build and learn. AI Engineer at Safran Aircraft Engines and Computer Science student at CY Tech.',
+    image = '/card.png'
   } = $props();
 </script>
 
@@ -10,7 +10,6 @@
   <title>{title}</title>
   <meta name="description" content={description} />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="www.samfcheng.com" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={image} />

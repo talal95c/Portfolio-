@@ -1,4 +1,3 @@
-/* Ported from samfcheng.com (2.B3m9uUq9.css). Svelte hash classes kept verbatim in markup. */
 .badge.svelte-dtbgkf {
   z-index: 2;
   position: absolute;
@@ -456,11 +455,11 @@ h3.svelte-7hpc9t {
 h1.svelte-1uha8ag {
   letter-spacing: -0.02em;
   white-space: nowrap;
-  font-size: 19.9vw;
+  font-size: 17.8vw;
   line-height: 1;
   position: absolute;
   bottom: 3vw;
-  left: -2.3vw;
+  left: 0;
 }
 .mobile-badge.svelte-1uha8ag {
   display: none;

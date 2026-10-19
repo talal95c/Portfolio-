@@ -1,4 +1,3 @@
-// Ported from samfcheng.com production bundle (chunk C41mHjnf.js).
 import {
   Plane as e,
   ShapeGeometry as t,

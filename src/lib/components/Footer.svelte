@@ -1,20 +1,13 @@
 <footer>
-  <h2>Building products that <br />people care about</h2>
+  <h2>Building things and <br />learning along the way</h2>
   <p>
-    <span class="contact-line">I love designing products and the stories behind</span>
+    <span class="contact-line">I love building products and learning in public. I’d love to connect on</span>
     <span class="contact-line">
-      them. I’d love to connect on
-      <a class="social" href="https://linkedin.com/in/samfcheng" target="_blank" rel="noopener noreferrer"><span class="social-pill linkedin">LinkedIn</span></a>,
-      <a class="social" href="https://x.com/samfcheng" target="_blank" rel="noopener noreferrer"><span class="social-pill twitter">X (Twitter)</span></a>,
-    </span>
-    <span class="contact-line">
+      <a class="social" href="https://linkedin.com/in/talalaamir" target="_blank" rel="noopener noreferrer"><span class="social-pill linkedin">LinkedIn</span></a>
       or
-      <a class="social" href="https://instagram.com/samssamples" target="_blank" rel="noopener noreferrer"><span class="social-pill instagram">Instagram</span></a>.
-      If you’d like to reach out, you can also
-    </span>
-    <span class="contact-line">
-      send me an email at
-      <a class="social" href="mailto:sam@samfcheng.com"><span class="social-pill email">sam@samfcheng.com</span></a>.
+      <a class="social" href="https://github.com/talal95c" target="_blank" rel="noopener noreferrer"><span class="social-pill github">GitHub</span></a>,
+      or you can send me an email at
+      <a class="social" href="mailto:talalaamir958@gmail.com"><span class="social-pill email">talalaamir958@gmail.com</span></a>.
     </span>
   </p>
 </footer>
@@ -76,12 +69,8 @@
     background: #1400ff;
   }
 
-  .twitter {
+  .github {
     background: #000;
-  }
-
-  .instagram {
-    background: #ec3293;
   }
 
   .email {

@@ -1,9 +1,7 @@
 <script>
   import CaseStudyFigure from '$lib/components/CaseStudyFigure.svelte';
-  import CaseStudyTimeline from '$lib/components/CaseStudyTimeline.svelte';
   import Footer from '$lib/components/Footer.svelte';
   import Metatags from '$lib/components/Metatags.svelte';
-  import MultiplyCaseStudy from '$lib/components/MultiplyCaseStudy.svelte';
   import { onMount } from 'svelte';
   import '$lib/components/work.css';
 
@@ -67,7 +65,7 @@
   });
 </script>
 
-<Metatags title={`${project.name} — Sam Cheng`} description={project.description} />
+<Metatags title={`${project.name} — Talal Aamir`} description={project.description} />
 
 <main class="svelte-9hm5jc" style={`--project-color:${caseStudy.color}`}>
   <div class="nav-island svelte-9hm5jc" bind:this={navIsland}>
@@ -88,15 +86,14 @@
         ><path d="m9 10-5 4 5 4M4 14h11a4 4 0 0 0 0-8"></path></svg>
       </a>
       <div class="socials svelte-9hm5jc">
-        <a href="https://linkedin.com/in/samfcheng" target="_blank" rel="noopener noreferrer" class="svelte-9hm5jc">LinkedIn</a>
-        <a href="https://x.com/samfcheng" target="_blank" rel="noopener noreferrer" class="svelte-9hm5jc">X</a>
-        <a href="https://instagram.com/samssamples" target="_blank" rel="noopener noreferrer" class="svelte-9hm5jc">Instagram</a>
-        <a href="mailto:sam@samfcheng.com" class="svelte-9hm5jc">Email</a>
+        <a href="https://linkedin.com/in/talalaamir" target="_blank" rel="noopener noreferrer" class="svelte-9hm5jc">LinkedIn</a>
+        <a href="https://github.com/talal95c" target="_blank" rel="noopener noreferrer" class="svelte-9hm5jc">GitHub</a>
+        <a href="mailto:talalaamir958@gmail.com" class="svelte-9hm5jc">Email</a>
       </div>
     </nav>
   </div>
 
-  <header class="hero svelte-9hm5jc" class:laptop={project.slug === 'classmate'}>
+  <header class="hero svelte-9hm5jc">
     <div class="hero-art svelte-9hm5jc" aria-hidden="true">
       <img class="left svelte-9hm5jc" src={caseStudy.heroImages[0]} alt="" bind:this={leftArt} />
       <img class="right svelte-9hm5jc" src={caseStudy.heroImages[1]} alt="" bind:this={rightArt} />
@@ -133,17 +130,6 @@
   </header>
 
   <div class="study svelte-9hm5jc">
-    {#if caseStudy.sections}
-      <aside class="rail svelte-9hm5jc">
-        <div class="rail-inner svelte-9hm5jc">
-          <CaseStudyTimeline sections={caseStudy.sections} variant="rail" />
-        </div>
-      </aside>
-      <div class="pill svelte-9hm5jc">
-        <CaseStudyTimeline sections={caseStudy.sections} variant="pill" />
-      </div>
-    {/if}
-
     <section
       class="context reading-column svelte-9hm5jc"
       id="context"
@@ -174,39 +160,33 @@
       />
     </div>
 
-    {#if project.slug === 'multiply'}
-      <MultiplyCaseStudy />
-    {:else}
-      <section class="upcoming svelte-9hm5jc" aria-label="Full case study coming soon">
-        <div class="reading-column blurred-preview svelte-9hm5jc" aria-hidden="true" inert>
-          <h2 class="svelte-9hm5jc">
-            <span class="section-number svelte-9hm5jc">01<span class="rule svelte-9hm5jc"></span></span>The problem
-          </h2>
-          <p class="svelte-9hm5jc">{caseStudy.goal}</p>
-          <p class="svelte-9hm5jc">{caseStudy.context}</p>
-          <p class="svelte-9hm5jc">{project.description}</p>
-          <p class="svelte-9hm5jc">{caseStudy.context}</p>
-          <p class="svelte-9hm5jc">{caseStudy.goal}</p>
+    <section class="upcoming svelte-9hm5jc" aria-label="Full case study coming soon">
+      <div class="reading-column blurred-preview svelte-9hm5jc" aria-hidden="true" inert>
+        <h2 class="svelte-9hm5jc">
+          <span class="section-number svelte-9hm5jc">01<span class="rule svelte-9hm5jc"></span></span>The problem
+        </h2>
+        <p class="svelte-9hm5jc">{caseStudy.goal}</p>
+        <p class="svelte-9hm5jc">{caseStudy.context}</p>
+        <p class="svelte-9hm5jc">{project.description}</p>
+      </div>
+      <div class="progressive-blur svelte-9hm5jc" aria-hidden="true">
+        <span class="svelte-9hm5jc"></span>
+        <span class="svelte-9hm5jc"></span>
+        <span class="svelte-9hm5jc"></span>
+        <span class="svelte-9hm5jc"></span>
+      </div>
+      <div class="coming-soon svelte-9hm5jc">
+        <div class="pill-track svelte-9hm5jc" aria-hidden="true">
+          {#each [0, 1] as copy}
+            <div class="pill-group svelte-9hm5jc">
+              {#each Array(16) as _, index}
+                <span class="svelte-9hm5jc" class:dark={index % 2 === 1}>Coming Soon</span>
+              {/each}
+            </div>
+          {/each}
         </div>
-        <div class="progressive-blur svelte-9hm5jc" aria-hidden="true">
-          <span class="svelte-9hm5jc"></span>
-          <span class="svelte-9hm5jc"></span>
-          <span class="svelte-9hm5jc"></span>
-          <span class="svelte-9hm5jc"></span>
-        </div>
-        <div class="coming-soon svelte-9hm5jc">
-          <div class="pill-track svelte-9hm5jc" aria-hidden="true">
-            {#each [0, 1] as copy}
-              <div class="pill-group svelte-9hm5jc">
-                {#each Array(16) as _, index}
-                  <span class="svelte-9hm5jc" class:dark={index % 2 === 1}>Coming Soon</span>
-                {/each}
-              </div>
-            {/each}
-          </div>
-        </div>
-      </section>
-    {/if}
+      </div>
+    </section>
   </div>
 </main>
 

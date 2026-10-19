@@ -75,4 +75,4 @@
   });
 </script>
 
-<div class="badge svelte-dtbgkf"><img class="still svelte-dtbgkf" class:hidden={ready} src={still} alt={ready ? '' : 'Sam Cheng badge'} width="704" height="1768" fetchpriority="high" decoding="async" /> <canvas bind:this={canvas} class="svelte-dtbgkf" class:hidden={!ready} data-state={sceneState} aria-label="Sam Cheng’s interactive badge. Drag to move it."></canvas></div>
+<div class="badge svelte-dtbgkf"><img class="still svelte-dtbgkf" class:hidden={ready} src={still} alt={ready ? '' : 'Talal Aamir badge'} width="704" height="1768" fetchpriority="high" decoding="async" /> <canvas bind:this={canvas} class="svelte-dtbgkf" class:hidden={!ready} data-state={sceneState} aria-label="Talal Aamir’s interactive badge. Drag to move it."></canvas></div>

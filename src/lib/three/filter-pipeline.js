@@ -1,4 +1,3 @@
-// Ported from samfcheng.com (createFilterPipeline in chunk BPhERcaf.js).
 import { Vector2 as U } from "three";
 import { EffectComposer as Yl } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass as Xl } from "three/examples/jsm/postprocessing/RenderPass.js";

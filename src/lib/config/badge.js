@@ -1,4 +1,3 @@
-// Ported from samfcheng.com (chunk _gfG-Lr4.js).
 export const badgeConfig = {
   physics: {
     gravity: 9.81,
