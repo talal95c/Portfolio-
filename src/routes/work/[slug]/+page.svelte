@@ -484,8 +484,10 @@
     justify-content: space-between;
     padding: 0 6px;
     border-radius: 999px;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 15px;
-    letter-spacing: -0.01em;
+    font-weight: 600;
+    letter-spacing: -0.015em;
   }
 
   nav a {
@@ -515,6 +517,24 @@
   .back svg {
     width: 16px;
     height: 16px;
+  }
+
+  .socials a {
+    padding: 9px 11px;
+  }
+
+  .socials a span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .socials a svg {
+    width: 17px;
+    height: 17px;
   }
 
   .socials {
@@ -990,22 +1010,6 @@
 
     .more-grid {
       grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 420px) {
-    .socials a span {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      white-space: nowrap;
-    }
-
-    .socials a svg {
-      width: 17px;
-      height: 17px;
     }
   }
 
