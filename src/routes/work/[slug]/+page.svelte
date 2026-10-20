@@ -210,23 +210,30 @@
   <div class="nav-island" bind:this={navIsland}>
     <nav aria-label="Case study navigation" bind:this={nav} inert={navInert}>
       <a class="back" href="/#work">
-        Back
         <svg
           aria-hidden="true"
-          width="18"
-          height="18"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           stroke-width="2"
           stroke-linecap="round"
           stroke-linejoin="round"
-        ><path d="m9 10-5 4 5 4M4 14h11a4 4 0 0 0 0-8"></path></svg>
+        ><path d="M15 18l-6-6 6-6"></path></svg>
+        <span>Back</span>
       </a>
       <div class="socials">
-        <a href="https://linkedin.com/in/talalaamir" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        <a href="https://github.com/talal95c" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href="mailto:talalaamir958@gmail.com">Email</a>
+        <a href="https://linkedin.com/in/talalaamir" target="_blank" rel="noopener noreferrer">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"></path></svg>
+          <span>LinkedIn</span>
+        </a>
+        <a href="https://github.com/talal95c" target="_blank" rel="noopener noreferrer">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.07 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3"></path></svg>
+          <span>GitHub</span>
+        </a>
+        <a href="mailto:talalaamir958@gmail.com">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"></rect><path d="m3.5 6.5 8.5 6.5 8.5-6.5"></path></svg>
+          <span>Email</span>
+        </a>
       </div>
     </nav>
   </div>
@@ -482,7 +489,9 @@
   }
 
   nav a {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
     padding: 8px 12px;
     border-radius: 999px;
     line-height: 1.2;
@@ -491,17 +500,21 @@
       opacity 0.2s;
   }
 
+  nav a svg {
+    display: block;
+    flex: none;
+    width: 15px;
+    height: 15px;
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
   .back {
-    display: inline-flex;
-    align-items: center;
     gap: 4px;
   }
 
   .back svg {
-    display: block;
-    flex: none;
-    width: 1em;
-    height: 1em;
+    width: 16px;
+    height: 16px;
   }
 
   .socials {
@@ -832,6 +845,14 @@
       background: rgba(0, 0, 0, 0.05);
     }
 
+    nav a:hover svg {
+      transform: scale(1.08);
+    }
+
+    .back:hover svg {
+      transform: translateX(-2px);
+    }
+
     .website-link:hover {
       opacity: 0.6;
     }
@@ -969,6 +990,22 @@
 
     .more-grid {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .socials a span {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .socials a svg {
+      width: 17px;
+      height: 17px;
     }
   }
 
