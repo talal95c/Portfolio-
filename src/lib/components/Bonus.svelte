@@ -155,12 +155,6 @@
     line-height: 1.45;
   }
 
-  @media (width <= 1100px) {
-    .grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
   @media (width <= 700px) {
     section {
       padding: 56px 24px 64px;
