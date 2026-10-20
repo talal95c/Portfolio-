@@ -10,9 +10,10 @@
   let { data } = $props();
   let project = $derived(data.project);
   let caseStudy = $derived(project.caseStudy);
-  let websiteHost = $derived(
-    project.website && new URL(project.website).hostname.replace(/^www\./, '')
-  );
+  let projectIndex = $derived(projects.findIndex((item) => item.slug === project.slug));
+  let projectNumber = $derived(String(projectIndex + 1).padStart(2, '0'));
+  let projectCount = $derived(String(projects.length).padStart(2, '0'));
+  let titleWords = $derived(project.name.split(/\s+/));
   let heroImage = $derived(
     media[caseStudy.heroImages[0]] ?? {
       src: caseStudy.heroImages[0],
@@ -34,8 +35,9 @@
       return true;
     });
 
-    return sources.map((source) => ({
+    return sources.map((source, index) => ({
       original: source,
+      index,
       ...(media[source] ?? {
         src: source,
         width: 890,
@@ -44,11 +46,18 @@
       }),
     }));
   });
-  let galleryPairAspect = $derived(
-    gallery.length > 1
-      ? (gallery[0].width / gallery[0].height + gallery[1].width / gallery[1].height) / 2
-      : 1
-  );
+  let galleryColumns = $derived.by(() => {
+    const columns = [[], []];
+    const heights = [0, 0];
+
+    for (const image of gallery) {
+      const column = heights[0] <= heights[1] ? 0 : 1;
+      columns[column].push(image);
+      heights[column] += image.height / image.width;
+    }
+
+    return columns;
+  });
   let moreProjects = $derived.by(() => {
     const index = Math.max(
       0,
@@ -61,6 +70,10 @@
   let navIsland;
   let nav;
   let navInert = $state(false);
+  let lightboxIndex = $state(-1);
+  let lightboxCloseButton = $state();
+  let lightboxTrigger;
+  let savedBodyOverflow = null;
 
   $effect(() => {
     if (!caseStudy.selection) return;
@@ -68,6 +81,45 @@
     document.documentElement.style.setProperty('--selection', caseStudy.selection);
     return () => document.documentElement.style.removeProperty('--selection');
   });
+
+  async function openLightbox(index, event) {
+    lightboxTrigger = event.currentTarget;
+    savedBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    lightboxIndex = index;
+    await tick();
+    lightboxCloseButton?.focus();
+  }
+
+  async function closeLightbox() {
+    if (lightboxIndex < 0) return;
+    lightboxIndex = -1;
+    if (savedBodyOverflow !== null) {
+      document.body.style.overflow = savedBodyOverflow;
+      savedBodyOverflow = null;
+    }
+    await tick();
+    lightboxTrigger?.focus();
+    lightboxTrigger = null;
+  }
+
+  function handleLightboxKeydown(event) {
+    if (lightboxIndex < 0) return;
+
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      void closeLightbox();
+    } else if (event.key === 'ArrowLeft' && gallery.length > 0) {
+      event.preventDefault();
+      lightboxIndex = (lightboxIndex - 1 + gallery.length) % gallery.length;
+    } else if (event.key === 'ArrowRight' && gallery.length > 0) {
+      event.preventDefault();
+      lightboxIndex = (lightboxIndex + 1) % gallery.length;
+    } else if (event.key === 'Tab') {
+      event.preventDefault();
+      lightboxCloseButton?.focus();
+    }
+  }
 
   onMount(() => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -87,17 +139,21 @@
     const scheduleUpdate = () => {
       if (animationFrame === undefined) animationFrame = requestAnimationFrame(update);
     };
+    const onMotionChange = () => scheduleUpdate();
 
     window.addEventListener('scroll', scheduleUpdate, { passive: true });
-    reducedMotion.addEventListener('change', scheduleUpdate);
+    window.addEventListener('keydown', handleLightboxKeydown);
+    reducedMotion.addEventListener('change', onMotionChange);
     nav.addEventListener('focusout', scheduleUpdate);
     update();
 
     return () => {
       window.removeEventListener('scroll', scheduleUpdate);
-      reducedMotion.removeEventListener('change', scheduleUpdate);
+      window.removeEventListener('keydown', handleLightboxKeydown);
+      reducedMotion.removeEventListener('change', onMotionChange);
       nav.removeEventListener('focusout', scheduleUpdate);
       if (animationFrame !== undefined) cancelAnimationFrame(animationFrame);
+      if (savedBodyOverflow !== null) document.body.style.overflow = savedBodyOverflow;
     };
   });
 
@@ -105,108 +161,42 @@
     const slug = project.slug;
     let disposed = false;
     let revealObserver;
-    let distortion = null;
-    let distortionPending = false;
     const mountedAt = performance.now();
-    const finePointer = window.matchMedia('(pointer: fine)');
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-    const canDistort = () =>
-      finePointer.matches &&
-      !reducedMotion.matches &&
-      document.documentElement.clientWidth > 700;
-
-    const removeGlState = () => {
-      pageRoot?.classList.remove('gl');
-      pageRoot?.querySelectorAll('.gl-ready').forEach((element) => {
-        element.classList.remove('gl-ready');
-      });
-    };
-
-    const buildDistortion = async () => {
-      if (disposed || distortion || distortionPending || !canDistort()) return;
-      distortionPending = true;
-      try {
-        const { createViewportDistortion } = await import('$lib/three/viewport-distortion.js');
-        if (disposed || !canDistort()) return;
-
-        const items = [...pageRoot.querySelectorAll('.appearance-media')]
-          .map((mediaElement) => {
-            const img = mediaElement.querySelector('img');
-            const hoverTarget = mediaElement.closest('.project-card');
-            return {
-              media: mediaElement,
-              img,
-              ...(hoverTarget ? { hoverTarget } : {}),
-            };
-          })
-          .filter((item) => item.img);
-        distortion = createViewportDistortion({ root: pageRoot, items });
-        if (!distortion) removeGlState();
-      } catch {
-        removeGlState();
-      } finally {
-        distortionPending = false;
-      }
-    };
-
-    const updateDistortion = () => {
-      if (canDistort()) {
-        buildDistortion();
-      } else {
-        distortion?.dispose();
-        distortion = null;
-        removeGlState();
-      }
-    };
 
     const setup = async () => {
       await tick();
       if (disposed) return;
-      pageRoot.classList.add('ready');
-      pageRoot.querySelector('.project-heading')?.classList.add('in');
 
-      const targets = [...pageRoot.querySelectorAll('.appearance-media')];
+      pageRoot.classList.add('ready');
+      const heading = pageRoot.querySelector('.project-heading');
+      requestAnimationFrame(() => heading?.classList.add('in'));
+
       revealObserver = new IntersectionObserver(
         (entries) => {
           for (const entry of entries) {
             if (!entry.isIntersecting) continue;
             const target = entry.target;
             const early = performance.now() - mountedAt <= 120;
-            const delay = reducedMotion.matches ? 0 : early ? 650 : 150;
             target.classList.add('in');
             if (early) target.classList.add('early');
-            target.dataset.appearAt = String(performance.now() + delay);
-
-            const card = target.closest('.project-card');
-            if (card) {
-              card.classList.add('in');
-              if (early) card.classList.add('early');
-            }
             revealObserver.unobserve(target);
           }
         },
         { rootMargin: '25% 0px' }
       );
-      targets.forEach((target) => revealObserver.observe(target));
-      buildDistortion();
+      pageRoot.querySelectorAll('.reveal').forEach((target) => revealObserver.observe(target));
     };
 
-    const setupPointer = () => updateDistortion();
-    const setupMotion = () => updateDistortion();
-    window.addEventListener('resize', updateDistortion);
-    finePointer.addEventListener('change', setupPointer);
-    reducedMotion.addEventListener('change', setupMotion);
     setup();
 
     return () => {
       disposed = true;
       revealObserver?.disconnect();
-      window.removeEventListener('resize', updateDistortion);
-      finePointer.removeEventListener('change', setupPointer);
-      reducedMotion.removeEventListener('change', setupMotion);
-      distortion?.dispose();
-      removeGlState();
+      if (savedBodyOverflow !== null) {
+        document.body.style.overflow = savedBodyOverflow;
+        savedBodyOverflow = null;
+      }
+      lightboxIndex = -1;
       void slug;
     };
   });
@@ -242,16 +232,59 @@
   {#key project.slug}
     <div class="page-content">
       <header class="project-heading">
-        <h1>{project.name}</h1>
+        <div class="eyebrow">
+          <span>PROJECT {projectNumber} / {projectCount}</span>
+          <span>{project.date}</span>
+        </div>
+        <h1 aria-label={project.name}>
+          {#each titleWords as word, index (index)}
+            <span class="title-mask" aria-hidden="true">
+              <span class="title-word" style={`--word-index:${index}`}>{word}</span>
+            </span>
+            {#if index < titleWords.length - 1}{' '}{/if}
+          {/each}
+        </h1>
+
+        <div class="project-intro">
+          <p class="lead">{project.description}</p>
+          <div class="intro-details">
+            <div class="meta-grid">
+              <div class="meta-cell">
+                <span class="meta-label">Role</span>
+                <span class="meta-value">{caseStudy.role}</span>
+              </div>
+              <div class="meta-cell">
+                <span class="meta-label">Team</span>
+                <span class="meta-value">{caseStudy.team}</span>
+              </div>
+              <div class="meta-cell">
+                <span class="meta-label">Year</span>
+                <span class="meta-value">{project.date}</span>
+              </div>
+              <div class="meta-cell">
+                <span class="meta-label">Skills</span>
+                <span class="meta-value">{caseStudy.skills}</span>
+              </div>
+            </div>
+            {#if project.website}
+              <a
+                class="website-link"
+                href={project.website}
+                target="_blank"
+                rel="noopener noreferrer"
+              >View online ↗</a>
+            {/if}
+          </div>
+        </div>
       </header>
 
       <div
-        class="hero-media appearance-media"
+        class="hero-media reveal"
         style={`--media-aspect:${heroImage.width} / ${heroImage.height}`}
       >
         <img
           src={heroImage.src}
-          alt=""
+          alt={caseStudy.alt}
           width={heroImage.width}
           height={heroImage.height}
           fetchpriority="high"
@@ -260,96 +293,118 @@
         />
       </div>
 
-      <section class="overview-card" aria-labelledby="overview-title">
-        <h2 id="overview-title" class="section-label">Overview</h2>
-        <div class="overview-copy">
-          <div class="paragraphs">
-            <p>{caseStudy.context}</p>
-            <p>{caseStudy.goal}</p>
-          </div>
-          <dl class="details">
-            <div class="detail-row">
-              <dt>Role</dt>
-              <dd>{caseStudy.role}</dd>
-            </div>
-            <div class="detail-row">
-              <dt>Team</dt>
-              <dd>{caseStudy.team}</dd>
-            </div>
-            <div class="detail-row">
-              <dt>Skills</dt>
-              <dd>{caseStudy.skills}</dd>
-            </div>
-            <div class="detail-row">
-              <dt>Year</dt>
-              <dd>{project.date}</dd>
-            </div>
-          </dl>
-          {#if project.website}
-            <a class="online-link" href={project.website} target="_blank" rel="noopener noreferrer">
-              View online
-            </a>
-          {/if}
-        </div>
-      </section>
+      <div class="story-rows">
+        <section class="story-row reveal" aria-labelledby="context-title">
+          <h2 id="context-title" class="story-label">
+            <span class="story-number">01</span><span>Context</span>
+          </h2>
+          <p class="story-copy">{caseStudy.context}</p>
+        </section>
+        <section class="story-row reveal" aria-labelledby="goal-title">
+          <h2 id="goal-title" class="story-label">
+            <span class="story-number">02</span><span>Goal</span>
+          </h2>
+          <p class="story-copy">{caseStudy.goal}</p>
+        </section>
+      </div>
 
       {#if gallery.length}
         <section class="gallery" aria-label="Project gallery">
-          {#if gallery.length > 1}
-            <div class="gallery-pair" style={`--pair-aspect:${galleryPairAspect}`}>
-              {#each gallery.slice(0, 2) as image, index (image.original)}
-                <div
-                  class="gallery-media appearance-media"
-                  style={`--media-aspect:${image.width} / ${image.height}`}
-                >
+          {#if gallery.length === 1}
+            {#each gallery as image (image.original)}
+              <button
+                class="gallery-item reveal gallery-single"
+                type="button"
+                aria-label={`Open image ${image.index + 1} of ${gallery.length}`}
+                onclick={(event) => openLightbox(image.index, event)}
+              >
+                <span class="gallery-media" style={`--media-aspect:${image.width} / ${image.height}`}>
                   <img
                     src={image.src}
-                    alt={index === 0 ? caseStudy.alt : ''}
+                    alt={caseStudy.alt}
                     width={image.width}
                     height={image.height}
                     loading="lazy"
                     decoding="async"
                   />
+                </span>
+                <span class="gallery-plus" aria-hidden="true">+</span>
+              </button>
+            {/each}
+          {:else}
+            <div class="gallery-columns">
+              {#each galleryColumns as column, columnIndex (columnIndex)}
+                <div class="gallery-column" role="group" aria-label={`Gallery column ${columnIndex + 1}`}>
+                  {#each column as image (image.original)}
+                    <button
+                      class="gallery-item reveal"
+                      type="button"
+                      aria-label={`Open image ${image.index + 1} of ${gallery.length}`}
+                      onclick={(event) => openLightbox(image.index, event)}
+                    >
+                      <span class="gallery-media" style={`--media-aspect:${image.width} / ${image.height}`}>
+                        <img
+                          src={image.src}
+                          alt={image.index === 0 ? caseStudy.alt : ''}
+                          width={image.width}
+                          height={image.height}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </span>
+                      <span class="gallery-plus" aria-hidden="true">+</span>
+                    </button>
+                  {/each}
                 </div>
               {/each}
             </div>
-            {#each gallery.slice(2) as image (image.original)}
-              <div
-                class="gallery-media appearance-media"
-                style={`--media-aspect:${image.width} / ${image.height}`}
-              >
-                <img
-                  src={image.src}
-                  alt=""
-                  width={image.width}
-                  height={image.height}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-            {/each}
-          {:else}
-            {#each gallery as image (image.original)}
-              <div
-                class="gallery-media appearance-media"
-                style={`--media-aspect:${image.width} / ${image.height}`}
-              >
-                <img
-                  src={image.src}
-                  alt={caseStudy.alt}
-                  width={image.width}
-                  height={image.height}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-            {/each}
+            <div class="gallery-mobile-list">
+              {#each gallery as image (image.original)}
+                <button
+                  class="gallery-item reveal"
+                  type="button"
+                  aria-label={`Open image ${image.index + 1} of ${gallery.length}`}
+                  onclick={(event) => openLightbox(image.index, event)}
+                >
+                  <span class="gallery-media" style={`--media-aspect:${image.width} / ${image.height}`}>
+                    <img
+                      src={image.src}
+                      alt={image.index === 0 ? caseStudy.alt : ''}
+                      width={image.width}
+                      height={image.height}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </span>
+                  <span class="gallery-plus" aria-hidden="true">+</span>
+                </button>
+              {/each}
+            </div>
           {/if}
         </section>
       {/if}
 
+      {#if caseStudy.results?.length}
+        <section class="story-row results-row reveal" aria-labelledby="results-title">
+          <h2 id="results-title" class="story-label">
+            <span class="story-number">03</span><span>Results</span>
+          </h2>
+          <div class="results-grid">
+            {#each caseStudy.results as result}
+              <div class="result">
+                <p class="result-value">{result.value}</p>
+                <p class="result-label">{result.label}</p>
+              </div>
+            {/each}
+          </div>
+        </section>
+      {/if}
+
       <section class="more-projects" aria-labelledby="more-title">
-        <h2 id="more-title" class="section-label">More projects</h2>
+        <div class="more-header reveal">
+          <h2 id="more-title">More projects</h2>
+          <a href="/#work" class="all-works">All works</a>
+        </div>
         <div class="more-grid">
           {#each moreProjects as moreProject (moreProject.slug)}
             <ProjectCard project={moreProject} />
@@ -357,6 +412,38 @@
         </div>
       </section>
     </div>
+
+    {#if lightboxIndex >= 0 && gallery[lightboxIndex]}
+      <div class="lightbox">
+        <button
+          class="lightbox-backdrop"
+          type="button"
+          aria-label="Close image viewer"
+          tabindex="-1"
+          onclick={closeLightbox}
+        ></button>
+        <div class="lightbox-dialog" role="dialog" aria-modal="true" aria-label={`${project.name} image viewer`}>
+          <button
+            class="lightbox-close"
+            type="button"
+            aria-label="Close image viewer"
+            bind:this={lightboxCloseButton}
+            onclick={closeLightbox}
+          >×</button>
+          <img
+            class="lightbox-image"
+            src={gallery[lightboxIndex].src}
+            alt={lightboxIndex === 0 ? caseStudy.alt : ''}
+            width={gallery[lightboxIndex].width}
+            height={gallery[lightboxIndex].height}
+          />
+          <div class="lightbox-caption">
+            <span>{project.name}</span>
+            <span aria-live="polite">{lightboxIndex + 1} / {gallery.length}</span>
+          </div>
+        </div>
+      </div>
+    {/if}
   {/key}
 </main>
 
@@ -421,46 +508,116 @@
   }
 
   .page-content {
-    padding: 0 var(--page-gutter) 136px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 160px 20px 136px;
   }
 
-  .project-heading {
-    margin-top: 123px;
-    margin-bottom: 40px;
-    text-align: center;
+  .eyebrow {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    opacity: 0.6;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    text-transform: uppercase;
   }
 
   .project-heading h1 {
-    font-size: clamp(64px, 12vw, 171px);
+    margin-top: 16px;
+    font-size: clamp(56px, 9vw, 128px);
     font-weight: 500;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.03em;
     line-height: 0.9;
+    text-align: center;
+    text-transform: uppercase;
   }
 
-  :global(#project-page.ready) .project-heading {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  :global(#project-page.ready) .project-heading:global(.in) {
-    opacity: 1;
-    transform: translateY(0);
-    transition:
-      opacity 0.6s var(--ease-out) 0.1s,
-      transform 0.6s var(--ease-out) 0.1s;
-  }
-
-  .hero-media,
-  .gallery-media {
-    position: relative;
+  .title-mask {
+    display: inline-block;
     overflow: hidden;
-    border-radius: 7px;
-    background: #eee;
+    vertical-align: bottom;
+  }
+
+  .title-word {
+    display: inline-block;
+    padding-bottom: 0.08em;
+  }
+
+  :global(#project-page.ready) .title-word {
+    transform: translateY(100%);
+  }
+
+  :global(#project-page.ready) .project-heading:global(.in) .title-word {
+    transform: translateY(0);
+    transition: transform 0.8s var(--ease-out);
+    transition-delay: calc(var(--word-index) * 60ms);
+  }
+
+  .project-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 40px;
+    margin-top: 48px;
+  }
+
+  .lead {
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 20px;
+    column-gap: 24px;
+  }
+
+  .meta-cell {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .meta-label {
+    opacity: 0.55;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .meta-value {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .website-link {
+    display: inline-block;
+    margin-top: 24px;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    text-transform: uppercase;
+    transition: opacity 0.2s;
   }
 
   .hero-media {
     width: 100%;
+    margin-top: 64px;
     aspect-ratio: var(--media-aspect);
+    overflow: hidden;
+    background: #eee;
   }
 
   .hero-media img,
@@ -471,158 +628,197 @@
     object-fit: cover;
   }
 
-  :global(#project-page.ready) .hero-media img,
-  :global(#project-page.ready) .gallery-media img {
-    opacity: 0;
-    translate: 0 25px;
+  .story-rows {
+    margin-top: 80px;
   }
 
-  :global(#project-page.ready) .hero-media:global(.in) img,
-  :global(#project-page.ready) .gallery-media:global(.in) img {
-    opacity: 1;
-    translate: 0 0;
-    transition:
-      opacity 0.5s cubic-bezier(0.33, 1, 0.68, 1) var(--image-delay, 150ms),
-      translate 0.5s cubic-bezier(0.33, 1, 0.68, 1) var(--image-delay, 150ms);
-  }
-
-  :global(#project-page.ready) .hero-media,
-  :global(#project-page.ready) .gallery-media {
-    --image-delay: 150ms;
-  }
-
-  :global(#project-page.ready) .hero-media:global(.early),
-  :global(#project-page.ready) .gallery-media:global(.early) {
-    --image-delay: 650ms;
-  }
-
-  .overview-card {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    margin-top: 10px;
-    padding: 40px;
-    border-radius: 7px;
-    background: #111;
-    color: rgba(255, 255, 255, 0.88);
-  }
-
-  .section-label {
-    color: #8a8a8a;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    line-height: 1.2;
-    text-transform: uppercase;
-  }
-
-  .overview-card .section-label {
-    color: rgba(255, 255, 255, 0.5);
-  }
-
-  .paragraphs {
-    font-size: 21px;
-    font-weight: 400;
-    letter-spacing: -0.01em;
-    line-height: 1.4;
-  }
-
-  .paragraphs p + p {
-    margin-top: 24px;
-  }
-
-  .details {
-    margin: 40px 0 0;
-    padding: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-  }
-
-  .detail-row {
+  .story-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 10px;
-    padding: 6px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    gap: 40px;
+    padding: 48px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
   }
 
-  .detail-row dt {
-    font-size: 21px;
+  .story-label {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    color: rgba(8, 8, 8, 0.6);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+    text-transform: uppercase;
+  }
+
+  .story-number {
+    opacity: 0.35;
+  }
+
+  .story-copy {
+    max-width: 560px;
+    font-size: 20px;
     font-weight: 400;
     letter-spacing: -0.01em;
-    line-height: 1.4;
-  }
-
-  .detail-row dd {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.88);
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    line-height: 1.4;
-    text-align: right;
-    text-transform: uppercase;
-    overflow-wrap: anywhere;
-  }
-
-  .online-link {
-    display: inline-block;
-    margin-top: 40px;
-    padding: 12px 20px;
-    border-radius: 100px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    line-height: 1.2;
-    transition: background-color 0.2s;
+    line-height: 1.45;
   }
 
   .gallery {
-    display: grid;
-    gap: 10px;
-    margin-top: 10px;
+    margin-top: 16px;
   }
 
-  .gallery-pair {
+  .gallery-columns {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
     gap: 10px;
   }
 
-  .gallery-pair .gallery-media {
-    aspect-ratio: var(--pair-aspect);
+  .gallery-column {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .gallery-mobile-list {
+    display: none;
+  }
+
+  .gallery-item {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: zoom-in;
+    text-align: left;
   }
 
   .gallery-media {
+    display: block;
     width: 100%;
     aspect-ratio: var(--media-aspect);
+    overflow: hidden;
+    background: #eee;
+  }
+
+  .gallery-media img {
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .gallery-plus {
+    position: absolute;
+    z-index: 1;
+    top: 12px;
+    left: 50%;
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border-radius: 50%;
+    background: #fff;
+    color: #080808;
+    font-size: 22px;
+    line-height: 1;
+    opacity: 0;
+    transform: translateX(-50%) scale(0.85);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s var(--ease-out);
+    pointer-events: none;
+  }
+
+  .gallery-item:focus-visible {
+    outline: 2px solid #080808;
+    outline-offset: 4px;
+  }
+
+  .results-row {
+    margin-top: 80px;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .result-value {
+    font-size: 40px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    overflow-wrap: anywhere;
+  }
+
+  .result-label {
+    margin-top: 10px;
+    opacity: 0.6;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.35;
   }
 
   .more-projects {
     margin-top: 144px;
   }
 
-  .more-projects > .section-label {
-    margin-bottom: 32px;
+  .more-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .more-header h2 {
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .all-works {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 999px;
+    background: #050505;
+    color: #f5f5f5;
+    font-size: 16px;
+    line-height: 1;
+    transition: opacity 0.2s;
+    white-space: nowrap;
   }
 
   .more-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: 20px;
+    margin-top: 40px;
   }
 
-  :global(#project-page.gl) .hero-media,
-  :global(#project-page.gl) .gallery-media {
-    background: transparent;
-  }
-
-  :global(#project-page.gl) .hero-media:global(.gl-ready) img,
-  :global(#project-page.gl) .gallery-media:global(.gl-ready) img {
+  :global(#project-page.ready) .reveal {
     opacity: 0;
-    translate: none;
-    transition: none;
+    transform: translateY(24px);
+    --reveal-delay: 150ms;
+  }
+
+  :global(#project-page.ready) .reveal:global(.early) {
+    --reveal-delay: 650ms;
+  }
+
+  :global(#project-page.ready) .reveal:global(.in) {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 0.7s ease-out var(--reveal-delay),
+      transform 0.7s ease-out var(--reveal-delay);
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -630,53 +826,214 @@
       background: rgba(0, 0, 0, 0.05);
     }
 
-    .online-link:hover {
-      background: rgba(255, 255, 255, 0.18);
+    .website-link:hover {
+      opacity: 0.6;
+    }
+
+    .gallery-item:hover .gallery-media img,
+    .gallery-item:focus-visible .gallery-media img {
+      transform: scale(1.02);
+    }
+
+    .gallery-item:hover .gallery-plus,
+    .gallery-item:focus-visible .gallery-plus {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    .all-works:hover {
+      opacity: 0.85;
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    :global(#project-page.ready) .project-heading {
-      transform: none;
+  .lightbox {
+    position: fixed;
+    z-index: 100;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(250, 250, 250, 0.4);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+  }
+
+  .lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: default;
+  }
+
+  .lightbox-dialog {
+    position: relative;
+    z-index: 1;
+    width: fit-content;
+    max-width: 90vw;
+    padding: 10px;
+    background: #fff;
+    animation: lightbox-in 0.35s var(--ease-out) both;
+  }
+
+  .lightbox-image {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: calc(90vw - 20px);
+    max-height: 72vh;
+    object-fit: contain;
+  }
+
+  .lightbox-caption {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding-top: 10px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    right: -50px;
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+    color: #080808;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  @keyframes lightbox-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
     }
 
-    :global(#project-page.ready) .project-heading:global(.in) {
-      transition: opacity 0.6s ease;
-    }
-
-    :global(#project-page.ready) .hero-media img,
-    :global(#project-page.ready) .gallery-media img {
-      translate: none;
-    }
-
-    :global(#project-page.ready) .hero-media:global(.in) img,
-    :global(#project-page.ready) .gallery-media:global(.in) img {
-      transition: opacity 0.5s ease;
+    to {
+      opacity: 1;
+      transform: scale(1);
     }
   }
 
-  @media (max-width: 700px) {
-    .project-heading {
-      margin-top: 123px;
+  @media (max-width: 809px) {
+    .page-content {
+      padding-top: 120px;
     }
 
-    .overview-card {
+    .lightbox-close {
+      top: 10px;
+      right: 10px;
+    }
+
+    .project-intro {
       grid-template-columns: 1fr;
-      padding: 24px;
+      gap: 32px;
     }
 
-    .paragraphs,
-    .detail-row dt {
-      font-size: 18px;
+    .story-row {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding: 32px 0;
     }
 
-    .gallery-pair,
+    .gallery-columns {
+      display: none;
+    }
+
+    .gallery-mobile-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
     .more-grid {
       grid-template-columns: 1fr;
     }
+  }
 
-    .gallery-pair .gallery-media {
-      aspect-ratio: var(--media-aspect);
+  @media (max-width: 560px) {
+    .lead {
+      font-size: 22px;
+    }
+
+    .meta-grid {
+      column-gap: 16px;
+    }
+
+    .story-copy {
+      font-size: 19px;
+    }
+
+    .result-value {
+      font-size: 32px;
+    }
+
+    .lightbox {
+      padding: 10px;
+    }
+
+    .lightbox-dialog {
+      max-width: 90vw;
+    }
+
+    .lightbox-image {
+      max-width: calc(90vw - 20px);
+      max-height: 72vh;
+    }
+
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(#project-page.ready) .title-word,
+    :global(#project-page.ready) .project-heading:global(.in) .title-word {
+      transform: none;
+      transition: none;
+      transition-delay: 0ms;
+    }
+
+    :global(#project-page.ready) .reveal,
+    :global(#project-page.ready) .reveal:global(.in) {
+      transform: none;
+      --reveal-delay: 0ms;
+    }
+
+    :global(#project-page.ready) .reveal:global(.in) {
+      transition:
+        opacity 0.7s ease-out 0ms,
+        transform 0.7s ease-out 0ms;
+    }
+
+    .gallery-media img {
+      transition: none;
+    }
+
+    .lightbox-dialog {
+      animation-name: lightbox-fade;
+    }
+  }
+
+  @keyframes lightbox-fade {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
     }
   }
 </style>
