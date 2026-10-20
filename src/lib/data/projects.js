@@ -25,7 +25,7 @@ export const projects = [
         { value: `25`, label: `Court rulings in the benchmark` },
         { value: `Winner`, label: `Mistral × Stanford Law School hackathon and Legora track` },
       ],
-      alt: `Legal AI question-and-answer interface for French court rulings.`,
+      alt: `Legible checking an AI draft against the speaker-attributed ruling.`,
       contextImage: `/work/legible/legible_screenshot_1.webp`,
       heroImages: [
         `/work/legible/legible_cover.webp`,
@@ -82,7 +82,7 @@ export const projects = [
       role: `Creator`,
       team: `Solo project`,
       skills: `Content strategy, writing, community`,
-      context: `Intellectuel Athlète is the TikTok channel I run on mind and body: discipline, learning and self-improvement, including the daily « Lifemaxxing » series. Over the past year it has reached 2.8M post views, 389K likes and 14.8K followers.`,
+      context: `Intellectuel Athlète is the TikTok channel I run on mind and body: discipline, learning and self-improvement, including the daily « Lifemaxxing » series. Over the past year it has reached 2.8M post views, 389.8K likes and 14.8K followers.`,
       goal: `Share what I learn about discipline, learning and tech with a wide audience, and build a community around it.`,
       results: [
         { value: `2.8M`, label: `Post views in the past year` },
