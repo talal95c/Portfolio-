@@ -24,14 +24,16 @@
   );
   let gallery = $derived.by(() => {
     const heroSrc = caseStudy.heroImages[0];
-    const seen = new Set();
+    const sourceHash = (source) => media[source]?.hash ?? source;
+    const seen = new Set([sourceHash(heroSrc)]);
     const sources = [
       ...project.images,
       ...caseStudy.heroImages,
       ...(caseStudy.contextImage ? [caseStudy.contextImage] : []),
     ].filter((source) => {
-      if (source === heroSrc || seen.has(source)) return false;
-      seen.add(source);
+      const hash = sourceHash(source);
+      if (seen.has(hash)) return false;
+      seen.add(hash);
       return true;
     });
 
@@ -531,7 +533,7 @@
     font-weight: 500;
     letter-spacing: -0.03em;
     line-height: 0.9;
-    text-align: center;
+    text-align: left;
     text-transform: uppercase;
   }
 

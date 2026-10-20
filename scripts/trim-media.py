@@ -1,5 +1,6 @@
 from pathlib import Path
 from PIL import Image, ImageStat
+import hashlib
 import json
 import math
 
@@ -118,6 +119,7 @@ def main():
         source_url = public_path(path)
         manifest[source_url] = {
             "src": public_path(output_path),
+            "hash": hashlib.sha1(path.read_bytes()).hexdigest()[:12],
             "width": width,
             "height": height,
             "tone": tone,
