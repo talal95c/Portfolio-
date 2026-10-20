@@ -5,7 +5,7 @@
     { value: 'Top 5%', label: 'engineering cycle, CY Tech', tint: '#eeebfa' },
     { value: '3 years', label: 'AI apprenticeship at Safran', tint: '#e8f1fb' },
     { value: '4', label: 'hackathon podiums', tint: '#fdeee6' },
-    { value: '2', label: 'certifications, Harvard & Anthropic', tint: '#e9f6ee' }
+    { value: '14.8K', label: 'followers on TikTok', tint: '#e9f6ee' }
   ];
 
   const timeline = [
