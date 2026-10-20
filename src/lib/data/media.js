@@ -5,6 +5,7 @@ export const media = {
     width: 890,
     height: 556,
     tone: "light",
+    card: {"src": "/work/adib/adib_cover_card.webp", "width": 284, "height": 524},
   },
   "/work/adib/adib_screenshot_1.webp": {
     src: "/work/adib/adib_screenshot_1_trim.webp",
@@ -12,6 +13,7 @@ export const media = {
     width: 311,
     height: 659,
     tone: "light",
+    card: {"src": "/work/adib/adib_screenshot_1_card.webp", "width": 261, "height": 629},
   },
   "/work/adib/adib_screenshot_2.webp": {
     src: "/work/adib/adib_screenshot_2_trim.webp",
@@ -19,6 +21,7 @@ export const media = {
     width: 312,
     height: 676,
     tone: "light",
+    card: {"src": "/work/adib/adib_screenshot_2_card.webp", "width": 293, "height": 639},
   },
   "/work/dino-race/dino-race_cover.webp": {
     src: "/work/dino-race/dino-race_cover.webp",
@@ -26,6 +29,7 @@ export const media = {
     width: 890,
     height: 676,
     tone: "dark",
+    card: {"src": "/work/dino-race/dino-race_cover_card.webp", "width": 890, "height": 676},
   },
   "/work/dino-race/dino-race_screenshot_1.webp": {
     src: "/work/dino-race/dino-race_screenshot_1.webp",
@@ -33,6 +37,7 @@ export const media = {
     width: 890,
     height: 676,
     tone: "dark",
+    card: {"src": "/work/dino-race/dino-race_screenshot_1_card.webp", "width": 890, "height": 676},
   },
   "/work/dino-race/dino-race_screenshot_2.webp": {
     src: "/work/dino-race/dino-race_screenshot_2.webp",
@@ -40,6 +45,7 @@ export const media = {
     width: 890,
     height: 676,
     tone: "dark",
+    card: {"src": "/work/dino-race/dino-race_screenshot_2_card.webp", "width": 890, "height": 676},
   },
   "/work/dino-race/dino-race_screenshot_3.webp": {
     src: "/work/dino-race/dino-race_screenshot_3.webp",
@@ -47,6 +53,7 @@ export const media = {
     width: 890,
     height: 676,
     tone: "dark",
+    card: {"src": "/work/dino-race/dino-race_screenshot_3_card.webp", "width": 890, "height": 676},
   },
   "/work/dino-race/dino-race_screenshot_4.webp": {
     src: "/work/dino-race/dino-race_screenshot_4.webp",
@@ -54,6 +61,7 @@ export const media = {
     width: 890,
     height: 676,
     tone: "dark",
+    card: {"src": "/work/dino-race/dino-race_screenshot_4_card.webp", "width": 890, "height": 676},
   },
   "/work/hackathons/hackathon1.webp": {
     src: "/work/hackathons/hackathon1_trim.webp",
@@ -61,6 +69,7 @@ export const media = {
     width: 890,
     height: 596,
     tone: "dark",
+    card: {"src": "/work/hackathons/hackathon1_card.webp", "width": 854, "height": 557},
   },
   "/work/hackathons/hackathon2.webp": {
     src: "/work/hackathons/hackathon2.webp",
@@ -68,6 +77,7 @@ export const media = {
     width: 890,
     height: 676,
     tone: "dark",
+    card: {"src": "/work/hackathons/hackathon2_card.webp", "width": 850, "height": 628},
   },
   "/work/hackathons/legible_screenshot.webp": {
     src: "/work/hackathons/legible_screenshot_trim.webp",
@@ -75,6 +85,7 @@ export const media = {
     width: 890,
     height: 556,
     tone: "light",
+    card: {"src": "/work/hackathons/legible_screenshot_card.webp", "width": 680, "height": 511},
   },
   "/work/intellectuel-athlete/intellectuel-athlete_cover.webp": {
     src: "/work/intellectuel-athlete/intellectuel-athlete_cover_trim.webp",
@@ -82,6 +93,15 @@ export const media = {
     width: 532,
     height: 596,
     tone: "dark",
+    card: {"src": "/work/intellectuel-athlete/intellectuel-athlete_cover_card.webp", "width": 455, "height": 523},
+  },
+  "/work/intellectuel-athlete/intellectuel-athlete_poster.webp": {
+    src: "/work/intellectuel-athlete/intellectuel-athlete_poster.webp",
+    hash: "b34bb6252ed5",
+    width: 1600,
+    height: 1200,
+    tone: "light",
+    card: {"src": "/work/intellectuel-athlete/intellectuel-athlete_poster.webp", "width": 1600, "height": 1200},
   },
   "/work/intellectuel-athlete/intellectuel-athlete_screenshot_1.webp": {
     src: "/work/intellectuel-athlete/intellectuel-athlete_screenshot_1_trim.webp",
@@ -89,6 +109,7 @@ export const media = {
     width: 487,
     height: 596,
     tone: "dark",
+    card: {"src": "/work/intellectuel-athlete/intellectuel-athlete_screenshot_1_card.webp", "width": 414, "height": 527},
   },
   "/work/intellectuel-athlete/intellectuel-athlete_screenshot_2.webp": {
     src: "/work/intellectuel-athlete/intellectuel-athlete_screenshot_2_trim.webp",
@@ -96,6 +117,7 @@ export const media = {
     width: 596,
     height: 594,
     tone: "dark",
+    card: {"src": "/work/intellectuel-athlete/intellectuel-athlete_screenshot_2_card.webp", "width": 515, "height": 519},
   },
   "/work/legible/legible_cover.webp": {
     src: "/work/legible/legible_cover_trim.webp",
@@ -103,6 +125,7 @@ export const media = {
     width: 835,
     height: 622,
     tone: "light",
+    card: {"src": "/work/legible/legible_cover_card.webp", "width": 753, "height": 547},
   },
   "/work/legible/legible_screenshot_1.webp": {
     src: "/work/legible/legible_screenshot_1_trim.webp",
@@ -110,6 +133,7 @@ export const media = {
     width: 832,
     height: 623,
     tone: "light",
+    card: {"src": "/work/legible/legible_screenshot_1_card.webp", "width": 753, "height": 549},
   },
   "/work/legible/legible_screenshot_2.webp": {
     src: "/work/legible/legible_screenshot_2_trim.webp",
@@ -117,6 +141,7 @@ export const media = {
     width: 835,
     height: 621,
     tone: "light",
+    card: {"src": "/work/legible/legible_screenshot_2_card.webp", "width": 753, "height": 547},
   },
   "/work/miropolis/miropolis_cover.webp": {
     src: "/work/miropolis/miropolis_cover_trim.webp",
@@ -124,6 +149,7 @@ export const media = {
     width: 872,
     height: 618,
     tone: "dark",
+    card: {"src": "/work/miropolis/miropolis_cover_card.webp", "width": 801, "height": 544},
   },
   "/work/miropolis/miropolis_screenshot_1.webp": {
     src: "/work/miropolis/miropolis_screenshot_1_trim.webp",
@@ -131,6 +157,7 @@ export const media = {
     width: 872,
     height: 618,
     tone: "dark",
+    card: {"src": "/work/miropolis/miropolis_screenshot_1_card.webp", "width": 801, "height": 542},
   },
   "/work/miropolis/miropolis_screenshot_2.webp": {
     src: "/work/miropolis/miropolis_screenshot_2_trim.webp",
@@ -138,6 +165,7 @@ export const media = {
     width: 872,
     height: 618,
     tone: "dark",
+    card: {"src": "/work/miropolis/miropolis_screenshot_2_card.webp", "width": 801, "height": 544},
   },
   "/work/sylo/sylo_cover.webp": {
     src: "/work/sylo/sylo_cover_trim.webp",
@@ -145,6 +173,7 @@ export const media = {
     width: 872,
     height: 554,
     tone: "light",
+    card: {"src": "/work/sylo/sylo_cover_card.webp", "width": 825, "height": 493},
   },
   "/work/sylo/sylo_screenshot_1.webp": {
     src: "/work/sylo/sylo_screenshot_1_trim.webp",
@@ -152,6 +181,7 @@ export const media = {
     width: 872,
     height: 555,
     tone: "light",
+    card: {"src": "/work/sylo/sylo_screenshot_1_card.webp", "width": 825, "height": 495},
   },
   "/work/sylo/sylo_screenshot_2.webp": {
     src: "/work/sylo/sylo_screenshot_2_trim.webp",
@@ -159,6 +189,7 @@ export const media = {
     width: 890,
     height: 513,
     tone: "light",
+    card: {"src": "/work/sylo/sylo_screenshot_2_card.webp", "width": 625, "height": 468},
   },
   "/work/wildwater/wildwater_cover.webp": {
     src: "/work/wildwater/wildwater_cover_trim.webp",
@@ -166,6 +197,7 @@ export const media = {
     width: 791,
     height: 516,
     tone: "light",
+    card: {"src": "/work/wildwater/wildwater_cover_card.webp", "width": 717, "height": 447},
   },
   "/work/wildwater/wildwater_screenshot_1.webp": {
     src: "/work/wildwater/wildwater_screenshot_1_trim.webp",
@@ -173,6 +205,7 @@ export const media = {
     width: 791,
     height: 516,
     tone: "light",
+    card: {"src": "/work/wildwater/wildwater_screenshot_1_card.webp", "width": 672, "height": 447},
   },
   "/work/wildwater/wildwater_screenshot_2.webp": {
     src: "/work/wildwater/wildwater_screenshot_2_trim.webp",
@@ -180,6 +213,7 @@ export const media = {
     width: 791,
     height: 516,
     tone: "light",
+    card: {"src": "/work/wildwater/wildwater_screenshot_2_card.webp", "width": 711, "height": 447},
   },
   "/work/wildwater/wildwater_screenshot_3.webp": {
     src: "/work/wildwater/wildwater_screenshot_3_trim.webp",
@@ -187,5 +221,6 @@ export const media = {
     width: 791,
     height: 516,
     tone: "light",
+    card: {"src": "/work/wildwater/wildwater_screenshot_3_card.webp", "width": 711, "height": 447},
   },
 };

@@ -3,14 +3,11 @@
   import { plainText } from '$lib/rich.js';
 
   let { project } = $props();
-  let cover = $derived(
-    media[project.images[0]] ?? {
-      src: project.images[0],
-      width: 890,
-      height: 676,
-      tone: 'light',
-    }
-  );
+  let coverSource = $derived(project.caseStudy?.poster ?? project.images[0]);
+  let cover = $derived.by(() => {
+    const image = media[coverSource];
+    return image?.card ?? image ?? { src: coverSource, width: 890, height: 676 };
+  });
 </script>
 
 <a class="project-card" href="/work/{project.slug}">
@@ -24,28 +21,26 @@
       decoding="async"
     />
   </div>
-  <div class="card-scrim"></div>
-  <div class="card-content reveal">
+  <div class="card-caption">
     <h3>{project.name}</h3>
-    <p>{project.tags?.[0]} · {project.date}</p>
+    <span class="card-date">_{project.date}</span>
   </div>
   <p class="visually-hidden">{plainText(project.description)}</p>
 </a>
 
 <style>
   .project-card {
-    position: relative;
     display: block;
-    aspect-ratio: 570 / 480;
-    overflow: hidden;
-    background: #eee;
-    color: #fff;
+    min-width: 0;
+    color: #111;
   }
 
   .card-media {
-    position: absolute;
-    inset: 0;
+    width: 100%;
+    aspect-ratio: 673 / 550;
     overflow: hidden;
+    border-radius: 12px;
+    background: #efefef;
   }
 
   .card-media img {
@@ -56,36 +51,31 @@
     transition: transform 0.8s var(--ease-out);
   }
 
-  .card-scrim {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent 55%);
-    pointer-events: none;
+  .card-caption {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 12px;
+    padding: 0 12px;
   }
 
-  .card-content {
-    position: absolute;
-    z-index: 1;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    padding: 20px;
-  }
-
-  .card-content h3 {
-    color: #fff;
-    font-size: 36px;
+  .card-caption h3 {
+    min-width: 0;
+    color: #111;
+    font-size: 12px;
     font-weight: 500;
-    letter-spacing: -0.04em;
-    line-height: 1.05;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+    text-transform: uppercase;
   }
 
-  .card-content p {
-    margin-top: 8px;
-    color: rgba(255, 255, 255, 0.75);
-    font-size: 14px;
-    font-weight: 400;
+  .card-date {
+    flex: none;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 12px;
     line-height: 1.3;
+    text-align: right;
   }
 
   :global(#project-page.ready) .card-media {
@@ -106,24 +96,6 @@
       transform 0.7s ease-out var(--reveal-delay);
   }
 
-  :global(#project-page.ready) .card-content {
-    opacity: 0;
-    transform: translateY(24px);
-    --reveal-delay: 450ms;
-  }
-
-  :global(#project-page.ready) .card-content:global(.early) {
-    --reveal-delay: 1200ms;
-  }
-
-  :global(#project-page.ready) .card-content:global(.in) {
-    opacity: 1;
-    transform: translateY(0);
-    transition:
-      opacity 0.7s ease-out var(--reveal-delay),
-      transform 0.7s ease-out var(--reveal-delay);
-  }
-
   .visually-hidden {
     position: absolute;
     width: 1px;
@@ -136,28 +108,17 @@
   @media (hover: hover) and (pointer: fine) {
     .project-card:hover .card-media img,
     .project-card:focus-visible .card-media img {
-      transform: scale(1.04);
-    }
-  }
-
-  @media (max-width: 809px) {
-    .card-content h3 {
-      font-size: 28px;
+      transform: scale(1.03);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     :global(#project-page.ready) .card-media,
-    :global(#project-page.ready) .card-media:global(.in),
-    :global(#project-page.ready) .card-content,
-    :global(#project-page.ready) .card-content:global(.in) {
+    :global(#project-page.ready) .card-media:global(.in) {
+      opacity: 1;
       transform: none;
+      transition: none;
       --reveal-delay: 0ms;
-    }
-
-    :global(#project-page.ready) .card-media:global(.in),
-    :global(#project-page.ready) .card-content:global(.in) {
-      transition: opacity 0.7s ease-out;
     }
 
     .project-card:hover .card-media img,
