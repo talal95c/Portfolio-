@@ -7,9 +7,11 @@
   import Badge from '$lib/components/Badge.svelte';
   import WorkList from '$lib/components/WorkList.svelte';
   import Bonus from '$lib/components/Bonus.svelte';
+  import GitHubActivity from '$lib/components/GitHubActivity.svelte';
   import AboutDialog from '$lib/components/AboutDialog.svelte';
   import '$lib/styles/home.css';
 
+  let { data } = $props();
   let mobile = $state(true);
   let mobileBadge = $state(null);
   const mobileBadgeSrc = $derived(
@@ -55,7 +57,7 @@
     <p class="intro svelte-1uha8ag">
       I build and learn. <button type="button" class="more svelte-1uha8ag" aria-haspopup="dialog" onclick={() => (aboutOpen = true)}>[more]</button>
     </p>
-    <p class="education svelte-1uha8ag">AI Engineer @ Safran Aircraft Engines<br />Computer Science @ CY Tech</p>
+    <p class="education svelte-1uha8ag">AI Engineer @ Safran Aircraft Engines<br />Computer Science @ CY Tech, Paris</p>
     <h1 class="svelte-1uha8ag"><span class="svelte-1uha8ag">Talal</span> <span class="svelte-1uha8ag">Aamir</span></h1>
     {#if mobile}
       <div class="mobile-badge svelte-1uha8ag">
@@ -67,6 +69,7 @@
   </section>
   <WorkList />
   <Bonus />
+  <GitHubActivity activity={data.githubActivity} />
 </main>
 <Footer />
 <AboutDialog bind:open={aboutOpen} />

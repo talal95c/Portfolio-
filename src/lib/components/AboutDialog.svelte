@@ -3,7 +3,7 @@
 
   const experience = [
     { years: '2026 – Now', company: 'Safran Aircraft Engines', role: 'AI Engineer' },
-    { years: '2024 – Now', company: 'CY Tech', role: 'Computer Science' },
+    { years: '2024 – Now', company: 'CY Tech, Paris', role: 'Computer Science' },
     { years: '2026', company: 'Hackathons', role: 'Mistral × Stanford winner' },
     { years: 'Now', company: 'Intellectuel Athlète', role: 'Content creator' }
   ];
