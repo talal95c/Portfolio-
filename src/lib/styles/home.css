@@ -67,6 +67,7 @@ section.svelte-17ndl8v {
     filter 0.18s;
 }
 h2.svelte-17ndl8v {
+  position: relative;
   display: inline-block;
   max-width: 100%;
   letter-spacing: -0.02em;
@@ -97,12 +98,13 @@ h2.svelte-17ndl8v {
   text-decoration-color: currentColor;
 }
 .sticker.svelte-17ndl8v {
-  display: inline-block;
+  position: absolute;
+  top: calc(50% - 0.275em);
+  right: 100%;
   width: 0.55em;
   height: 0.55em;
-  margin-left: 0.08em;
+  margin-right: 0.14em;
   object-fit: contain;
-  vertical-align: middle;
   filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff)
     drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff) drop-shadow(0 3px 5px #0000002e);
   transform: rotate(-12deg);
@@ -258,6 +260,8 @@ canvas.svelte-17ndl8v {
     font-size: 32px;
   }
   .sticker.svelte-17ndl8v {
+    top: calc(50% - 0.25em);
+    margin-right: 0.08em;
     width: 0.5em;
     height: 0.5em;
   }
