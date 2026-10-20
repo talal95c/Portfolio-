@@ -108,8 +108,10 @@
     width: 120px;
     height: 84px;
     position: absolute;
-    top: 6px;
-    left: calc(100% - 52px);
+    top: 4px;
+    left: calc(100% - 46px);
+    transform: scale(0.72);
+    transform-origin: 0 0;
   }
 
   .arrow-svg {
@@ -233,10 +235,9 @@
 
   @media (width <= 700px) {
     .cv-note {
-      transform: scale(0.62);
-      transform-origin: 0 0;
-      top: 2px;
-      left: calc(100% - 38px);
+      transform: scale(0.55);
+      top: 10px;
+      left: calc(100% - 30px);
     }
   }
 
