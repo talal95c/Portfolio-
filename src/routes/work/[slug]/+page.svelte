@@ -743,6 +743,10 @@
     margin-top: 80px;
   }
 
+  .story-rows + .results-row {
+    margin-top: 0;
+  }
+
   .results-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
