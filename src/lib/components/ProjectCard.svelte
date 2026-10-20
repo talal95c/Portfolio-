@@ -157,6 +157,13 @@
     z-index: 1;
   }
 
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
   :global(#project-page.ready) .card .overlay {
     opacity: 0;
     transform: translateY(5px);
