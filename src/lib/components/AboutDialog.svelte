@@ -2,25 +2,24 @@
   let { open = $bindable(false) } = $props();
 
   const stats = [
-    { value: '4', label: 'hackathon podiums', tint: '#e8f1fb' },
-    { value: '14.8K', label: 'followers on TikTok', tint: '#fdeee6' },
-    { value: 'Top 20%', label: 'in maths, prépa', tint: '#eeebfa' },
-    { value: '50+', label: 'outreach rounds', tint: '#e9f6ee' }
+    { value: 'Top 5%', label: 'engineering cycle, CY Tech', tint: '#eeebfa' },
+    { value: 'Top 20%', label: 'in maths, integrated prépa', tint: '#e9f6ee' },
+    { value: '3 years', label: 'AI apprenticeship at Safran', tint: '#e8f1fb' },
+    { value: '4', label: 'hackathon podiums', tint: '#fdeee6' }
   ];
 
   const timeline = [
     {
-      title: 'Experience',
+      title: 'Education',
       items: [
-        { years: '2026 – 2029', company: 'Safran Aircraft Engines', role: 'AI Engineer', emoji: 'plane', note: 'Apprenticeship. Designing and shipping agentic AI that automates sales administration, wired into real business tools and data.' },
-        { years: 'Now', company: 'Intellectuel Athlète', role: 'Content creator', emoji: 'brain', note: 'Personal development and tech content, 2.8M views on TikTok.' }
+        { years: '2026 – 2029', company: 'CY Tech, Paris', role: 'Engineering cycle', emoji: 'laptop', note: 'Master of Engineering in Computer Science, top 5% of the cohort. Apprenticeship with Safran.' },
+        { years: '2024 – 2026', company: 'CY Tech, Paris', role: 'Integrated prépa', emoji: 'ruler', note: 'Two-year preparatory cycle in maths, physics and computer science, top 20% in mathematics.' }
       ]
     },
     {
-      title: 'Education',
+      title: 'Experience',
       items: [
-        { years: '2026 – 2029', company: 'CY Tech, Paris', role: 'Engineering cycle', emoji: 'laptop', note: 'Master of Engineering in Computer Science.' },
-        { years: '2024 – 2026', company: 'CY Tech, Paris', role: 'Integrated prépa', emoji: 'ruler', note: 'Two-year preparatory cycle in maths and physics, top 20% in mathematics.' }
+        { years: '2026 – 2029', company: 'Safran Aircraft Engines', role: 'AI Engineer', emoji: 'plane', note: 'Apprenticeship. Agentic AI that automates sales administration, connecting generative AI to existing business tools and data. Working with business teams in Montereau-sur-le-Jard to identify and prioritise use cases.' }
       ]
     },
     {
@@ -80,10 +79,10 @@
     </header>
 
     <div class="block" style="--i: 0">
-      <p class="lead">AI engineer at <strong>Safran Aircraft Engines</strong> and engineering student at <strong>CY Tech, Paris</strong>. I learn by shipping.</p>
+      <p class="lead">Computer science engineering student at <strong>CY Tech, Paris</strong>, and AI engineer apprentice at <strong>Safran Aircraft Engines</strong>.</p>
       <div class="bio">
-        <p>At Safran, I design and ship agentic AI that automates sales administration end to end, from the model to the tools teams already use.</p>
-        <p><strong>Legible</strong>, my legal AI harness, won the Mistral × Stanford Law School hackathon and its Legora track. Off the keyboard, I create content as <strong>Intellectuel Athlète</strong>, compete in jiu-jitsu and grappling, and volunteer with Au cœur de la précarité.</p>
+        <p>After two years of integrated prépa at CY Tech, finished in the top 20% in mathematics, I joined the computer science engineering cycle, where I rank in the top 5%.</p>
+        <p>In parallel, at Safran, I design and ship agentic AI that automates sales administration, from the model to the tools teams already use. In hackathons, <strong>Legible</strong>, my legal AI harness, won the Mistral × Stanford Law School hackathon and its Legora track.</p>
       </div>
     </div>
 
@@ -93,13 +92,9 @@
       {/each}
     </ul>
 
-    <div class="headshot svelte-7hpc9t block" style="--i: 2">
-      <img src="/assets/talal-hackathon.webp" alt="Talal, in white, at a hackathon, working on a laptop with a teammate." width="1200" height="800" loading="lazy" decoding="async" class="svelte-7hpc9t" />
-      <img class="subject svelte-7hpc9t" src="/assets/talal-hackathon-subject.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" />
-    </div>
 
     {#each timeline as group, groupIndex (group.title)}
-      <section class="block" style={`--i: ${groupIndex + 3}`} aria-labelledby={`about-${group.title.toLowerCase()}`}>
+      <section class="block" style={`--i: ${groupIndex + 2}`} aria-labelledby={`about-${group.title.toLowerCase()}`}>
         <h3 id={`about-${group.title.toLowerCase()}`}>{group.title}</h3>
         <ol>
           {#each group.items as item (item.company + item.role)}
@@ -117,6 +112,11 @@
         </ol>
       </section>
     {/each}
+
+    <div class="headshot svelte-7hpc9t block" style={`--i: ${timeline.length + 2}`}>
+      <img src="/assets/talal-hackathon.webp" alt="Talal, in white, at a hackathon, working on a laptop with a teammate." width="1200" height="800" loading="lazy" decoding="async" class="svelte-7hpc9t" />
+      <img class="subject svelte-7hpc9t" src="/assets/talal-hackathon-subject.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" />
+    </div>
   </div>
 </dialog>
 
