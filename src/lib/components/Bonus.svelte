@@ -1,6 +1,45 @@
 <script>
   import { onMount } from 'svelte';
 
+  const cards = [
+    {
+      title: 'Intellectuel Athlète',
+      text: 'I create personal development and tech content: 14.8K followers and 2.8M views on TikTok.',
+      stickers: [
+        { src: 'brain', x: 0, y: 0, tilt: -12 },
+        { src: 'phone', x: 30, y: 16, tilt: 14, size: 26 },
+        { src: 'muscle', x: 52, y: -4, tilt: -6, size: 24 }
+      ]
+    },
+    {
+      title: 'Certifications',
+      text: 'CS50 from Harvard and Model Context Protocol from Anthropic.',
+      stickers: [
+        { src: 'cap', x: 0, y: 0, tilt: -10 },
+        { src: 'scroll', x: 30, y: 16, tilt: 12, size: 26 },
+        { src: 'medal', x: 52, y: -4, tilt: -4, size: 24 }
+      ]
+    },
+    {
+      title: 'Jiu-jitsu & grappling',
+      text: 'I compete in Brazilian jiu-jitsu and grappling, and I run.',
+      stickers: [
+        { src: 'gi', x: 0, y: 0, tilt: 10 },
+        { src: 'gold', x: 30, y: 16, tilt: -12, size: 26 },
+        { src: 'runner', x: 52, y: -4, tilt: 8, size: 24 }
+      ]
+    },
+    {
+      title: 'Volunteering',
+      text: '50+ weekly humanitarian outreach rounds (maraudes) with Au cœur de la précarité.',
+      stickers: [
+        { src: 'handshake', x: 0, y: 0, tilt: -8 },
+        { src: 'heart', x: 30, y: 16, tilt: 14, size: 24 },
+        { src: 'baguette', x: 50, y: -4, tilt: -18, size: 26 }
+      ]
+    }
+  ];
+
   let section;
   let visible = $state(false);
 
@@ -22,18 +61,23 @@
 <section bind:this={section} class:visible aria-labelledby="bonus-title">
   <h2 id="bonus-title">Bonus</h2>
   <div class="grid">
-    <article>
-      <h3 style="--tilt: -12deg">Intellectuel Athlète<img class="sticker" src="/stickers/brain.svg" alt="" aria-hidden="true" /></h3>
-      <p>I create personal development and tech content: 14,000+ followers and 2–3M monthly views.</p>
-    </article>
-    <article>
-      <h3 style="--tilt: 10deg">Jiu-jitsu &amp; grappling<img class="sticker" src="/stickers/gi.svg" alt="" aria-hidden="true" /></h3>
-      <p>I compete in Brazilian jiu-jitsu and grappling, and I run.</p>
-    </article>
-    <article>
-      <h3 style="--tilt: -8deg">Volunteering<img class="sticker" src="/stickers/handshake.svg" alt="" aria-hidden="true" /></h3>
-      <p>50+ weekly humanitarian outreach rounds (maraudes) with Au cœur de la précarité.</p>
-    </article>
+    {#each cards as card (card.title)}
+      <article>
+        <h3>
+          {card.title}
+          {#each card.stickers as sticker, index (sticker.src)}
+            <img
+              class="sticker"
+              src={`/stickers/${sticker.src}.svg`}
+              alt=""
+              aria-hidden="true"
+              style={`--x:${sticker.x}px;--y:${sticker.y}px;--tilt:${sticker.tilt}deg;--size:${sticker.size ?? 32}px;--delay:${index * 70}ms`}
+            />
+          {/each}
+        </h3>
+        <p>{card.text}</p>
+      </article>
+    {/each}
   </div>
 </section>
 
@@ -51,7 +95,7 @@
   }
 
   .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 48px;
     display: grid;
   }
@@ -72,6 +116,10 @@
     transition-delay: 140ms;
   }
 
+  article:nth-child(4) {
+    transition-delay: 210ms;
+  }
+
   .visible article {
     opacity: 1;
     transform: none;
@@ -90,16 +138,16 @@
     pointer-events: none;
     opacity: 0;
     transform-origin: 50% 100%;
-    width: 32px;
-    height: 32px;
+    width: var(--size);
+    height: var(--size);
     transition:
       transform 0.18s ease-in,
       opacity 0.12s ease-in;
     filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff)
       drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff) drop-shadow(0 3px 5px #0000002e);
     position: absolute;
-    bottom: calc(100% - 10px);
-    left: calc(100% + 2px);
+    bottom: calc(100% - 10px + var(--y));
+    left: calc(100% + 2px + var(--x));
     transform: translateY(10px) scale(0.3) rotate(calc(var(--tilt) * -2.5));
   }
 
@@ -107,8 +155,8 @@
     article:hover .sticker {
       opacity: 1;
       transition:
-        transform 0.5s cubic-bezier(0.34, 1.7, 0.5, 1),
-        opacity 0.15s ease-out;
+        transform 0.5s var(--delay) cubic-bezier(0.34, 1.7, 0.5, 1),
+        opacity 0.15s var(--delay) ease-out;
       transform: translateY(0) scale(1) rotate(var(--tilt));
     }
   }
@@ -118,6 +166,12 @@
     font-size: 16px;
     font-weight: 400;
     line-height: 1.45;
+  }
+
+  @media (width <= 1100px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   @media (width <= 700px) {

@@ -4,8 +4,47 @@
   const colors = ['#0000000d', '#00000026', '#0000004d', '#00000080', '#080808'];
   const day = 24 * 60 * 60 * 1000;
 
-  let { activity } = $props();
+  let { activity: initial } = $props();
+  let live = $state(null);
+  let activity = $derived(live ?? initial);
+  let tip = $state(null);
   let section;
+  let calendarEl;
+
+  const formatDate = (date) =>
+    new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(
+      new Date(`${date}T00:00:00Z`)
+    );
+
+  const describe = (cell) =>
+    cell.count === null
+      ? formatDate(cell.date)
+      : `${cell.count === 0 ? 'No' : cell.count} contribution${cell.count === 1 ? '' : 's'} on ${formatDate(cell.date)}`;
+
+  function showTip(event) {
+    const cell = event.target.closest?.('.cell[data-tip]');
+    if (!cell) return;
+    const box = calendarEl.getBoundingClientRect();
+    const rect = cell.getBoundingClientRect();
+    const x = rect.left - box.left + rect.width / 2;
+    const shift = x < 110 ? '-12px' : x > box.width - 110 ? 'calc(-100% + 12px)' : '-50%';
+    tip = { text: cell.dataset.tip, x, y: rect.top - box.top, shift };
+  }
+
+  async function refresh() {
+    try {
+      const response = await fetch('https://github-contributions-api.jogruber.de/v4/talal95c?y=last', { cache: 'no-store' });
+      if (!response.ok) return;
+      const data = await response.json();
+      if (!Array.isArray(data.contributions) || !data.contributions.length) return;
+      live = {
+        total: data.total?.lastYear ?? data.contributions.reduce((sum, entry) => sum + entry.count, 0),
+        contributions: data.contributions.map(({ date, level, count }) => ({ date, level, count }))
+      };
+    } catch {
+      // keep the build-time snapshot
+    }
+  }
   let scrollWindow;
   let visible = $state(false);
 
@@ -62,6 +101,7 @@
       { threshold: 0.15 }
     );
     observer.observe(section);
+    refresh();
 
     if (matchMedia('(max-width: 700px)').matches && scrollWindow) {
       scrollWindow.scrollLeft = scrollWindow.scrollWidth;
@@ -88,13 +128,13 @@
       aria-readonly="true"
       aria-label="Contribution heatmap"
     >
-      <div class="calendar" role="presentation">
+      <div class="calendar" role="presentation" bind:this={calendarEl}>
         <div class="months" aria-hidden="true">
           {#each calendar.months as month (month.week)}
             <span class="month" style={`grid-column: ${month.week + 1}`}>{month.label}</span>
           {/each}
         </div>
-        <div class="weeks" role="rowgroup">
+        <div class="weeks" role="rowgroup" onpointerover={showTip} onpointerleave={() => (tip = null)}>
           {#each calendar.weeks as week, weekIndex (weekIndex)}
             <div class="week" role="row">
               {#each week as cell, dayIndex (dayIndex)}
@@ -103,12 +143,8 @@
                     class="cell"
                     role="gridcell"
                     style={`--cell-color:${colors[cell.level] ?? colors[0]}`}
-                    title={cell.count === null
-                      ? cell.date
-                      : `${cell.count} contribution${cell.count === 1 ? '' : 's'} on ${cell.date}`}
-                    aria-label={cell.count === null
-                      ? cell.date
-                      : `${cell.count} contribution${cell.count === 1 ? '' : 's'} on ${cell.date}`}
+                    data-tip={describe(cell)}
+                    aria-label={describe(cell)}
                   ></span>
                 {:else}
                   <span
@@ -122,6 +158,9 @@
             </div>
           {/each}
         </div>
+        {#if tip}
+          <span class="tip" style={`left:${tip.x}px;top:${tip.y}px;--shift:${tip.shift}`} aria-hidden="true">{tip.text}</span>
+        {/if}
       </div>
     </div>
     <div class="activity-meta">
@@ -172,6 +211,8 @@
   }
 
   .chart-scroll {
+    padding-top: 36px;
+    margin-top: -36px;
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scrollbar-color: #00000026 transparent;
@@ -179,6 +220,7 @@
   }
 
   .calendar {
+    position: relative;
     width: 100%;
     min-width: 738px;
   }
@@ -219,6 +261,42 @@
     background: var(--cell-color);
     border-radius: 3px;
     display: block;
+    transition:
+      transform 0.25s cubic-bezier(0.34, 1.7, 0.5, 1),
+      box-shadow 0.15s;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cell[data-tip]:hover {
+      transform: scale(1.35);
+      box-shadow:
+        0 0 0 1.5px #fff,
+        0 2px 6px #00000033;
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  .tip {
+    pointer-events: none;
+    white-space: nowrap;
+    color: #fff;
+    background: #080808;
+    border-radius: 6px;
+    padding: 6px 9px;
+    font-size: 12px;
+    line-height: 1;
+    position: absolute;
+    z-index: 2;
+    transform: translate(var(--shift), calc(-100% - 8px));
+    animation: tip-in 0.18s var(--ease-out);
+  }
+
+  @keyframes tip-in {
+    from {
+      opacity: 0;
+      transform: translate(var(--shift), calc(-100% - 4px));
+    }
   }
 
   .legend-cell {
