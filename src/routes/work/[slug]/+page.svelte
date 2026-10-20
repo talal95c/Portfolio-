@@ -3,9 +3,9 @@
   import Footer from '$lib/components/Footer.svelte';
   import Metatags from '$lib/components/Metatags.svelte';
   import ProjectCard from '$lib/components/ProjectCard.svelte';
-  import { media } from '$lib/data/media.js';
   import { projects } from '$lib/data/projects.js';
   import { plainText, richSegments } from '$lib/rich.js';
+  import { workMedia } from '$lib/workMedia.js';
   import '$lib/components/work.css';
 
   let { data } = $props();
@@ -16,40 +16,13 @@
   let projectCount = $derived(String(projects.length).padStart(2, '0'));
   let titleWords = $derived(project.name.split(/\s+/));
   let longestTitleWord = $derived(Math.max(...titleWords.map((word) => word.length)));
-  let heroImage = $derived.by(() => {
-    const source = caseStudy.poster ?? caseStudy.heroImages[0];
-    const image = media[source];
-    return {
-      original: source,
-      ...(image?.card ?? image ?? { src: source, width: 890, height: 676 }),
-    };
-  });
-  let gallery = $derived.by(() => {
-    if (caseStudy.gallery === false) return [];
-
-    const heroSource = caseStudy.poster ?? caseStudy.heroImages[0];
-    const sourceHash = (source) => media[source]?.hash ?? source;
-    const seen = new Set([sourceHash(heroSource)]);
-    const sources = [
-      ...project.images,
-      ...caseStudy.heroImages,
-      ...(caseStudy.contextImage ? [caseStudy.contextImage] : []),
-    ].filter((source) => {
-      const hash = sourceHash(source);
-      if (seen.has(hash)) return false;
-      seen.add(hash);
-      return true;
-    });
-
-    return sources.map((source, index) => {
-      const image = media[source];
-      return {
-        original: source,
-        index,
-        ...(image?.card ?? image ?? { src: source, width: 890, height: 676 }),
-      };
-    });
-  });
+  let projectMedia = $derived(workMedia(project));
+  let heroImage = $derived(projectMedia[0]);
+  let gallery = $derived(
+    caseStudy.gallery === false
+      ? []
+      : projectMedia.slice(1).map((image, index) => ({ ...image, index }))
+  );
   let moreProjects = $derived.by(() => {
     const index = Math.max(
       0,
@@ -288,7 +261,6 @@
         <div class="project-body">
           <div
             class="hero-media media-frame reveal"
-            style={`--media-aspect:${heroImage.width} / ${heroImage.height}`}
           >
             <img
               src={heroImage.src}
@@ -318,7 +290,6 @@
                 <button
                   class="gallery-item media-frame reveal"
                   type="button"
-                  style={`--media-aspect:${image.width} / ${image.height}`}
                   aria-label={`Open image ${image.index + 1} of ${gallery.length}`}
                   onclick={(event) => openLightbox(image.index, event)}
                 >
@@ -627,19 +598,25 @@
   }
 
   .media-frame {
+    display: grid;
+    width: 100%;
+    aspect-ratio: 837 / 620;
+    place-items: center;
     overflow: hidden;
     border-radius: 12px;
-    background: #efefef;
+    background: #f0f0f0;
   }
 
-  .hero-media {
-    width: 100%;
-  }
-
-  .hero-media img {
+  .media-frame img {
     display: block;
-    width: 100%;
+    width: 76%;
     height: auto;
+    max-height: 80%;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 12px 32px rgba(0, 0, 0, 0.07);
   }
 
   .story-block {
@@ -680,14 +657,10 @@
   }
 
   .gallery-item {
-    display: block;
-    width: 100%;
-    aspect-ratio: var(--media-aspect);
     padding: 0;
     border: 0;
     color: inherit;
     cursor: zoom-in;
-    text-align: left;
   }
 
   .gallery-item:focus-visible {
@@ -696,10 +669,6 @@
   }
 
   .gallery-item img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
     transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
 
@@ -811,7 +780,7 @@
 
     .gallery-item:hover img,
     .gallery-item:focus-visible img {
-      transform: scale(1.02);
+      transform: scale(1.03);
     }
 
     .all-works:hover {
@@ -923,6 +892,10 @@
 
     .results-grid {
       grid-template-columns: minmax(0, 1fr);
+    }
+
+    .media-frame img {
+      width: 84%;
     }
 
     .more-grid {
