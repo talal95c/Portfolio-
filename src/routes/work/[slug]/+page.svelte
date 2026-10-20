@@ -15,18 +15,21 @@
   let projectNumber = $derived(String(projectIndex + 1).padStart(2, '0'));
   let projectCount = $derived(String(projects.length).padStart(2, '0'));
   let titleWords = $derived(project.name.split(/\s+/));
-  let heroImage = $derived(
-    media[caseStudy.heroImages[0]] ?? {
-      src: caseStudy.heroImages[0],
-      width: 890,
-      height: 676,
-      tone: 'light',
-    }
-  );
+  let longestTitleWord = $derived(Math.max(...titleWords.map((word) => word.length)));
+  let heroImage = $derived.by(() => {
+    const source = caseStudy.poster ?? caseStudy.heroImages[0];
+    const image = media[source];
+    return {
+      original: source,
+      ...(image?.card ?? image ?? { src: source, width: 890, height: 676 }),
+    };
+  });
   let gallery = $derived.by(() => {
-    const heroSrc = caseStudy.heroImages[0];
+    if (caseStudy.gallery === false) return [];
+
+    const heroSource = caseStudy.poster ?? caseStudy.heroImages[0];
     const sourceHash = (source) => media[source]?.hash ?? source;
-    const seen = new Set([sourceHash(heroSrc)]);
+    const seen = new Set([sourceHash(heroSource)]);
     const sources = [
       ...project.images,
       ...caseStudy.heroImages,
@@ -38,28 +41,14 @@
       return true;
     });
 
-    return sources.map((source, index) => ({
-      original: source,
-      index,
-      ...(media[source] ?? {
-        src: source,
-        width: 890,
-        height: 676,
-        tone: 'light',
-      }),
-    }));
-  });
-  let galleryColumns = $derived.by(() => {
-    const columns = [[], []];
-    const heights = [0, 0];
-
-    for (const image of gallery) {
-      const column = heights[0] <= heights[1] ? 0 : 1;
-      columns[column].push(image);
-      heights[column] += image.height / image.width;
-    }
-
-    return columns;
+    return sources.map((source, index) => {
+      const image = media[source];
+      return {
+        original: source,
+        index,
+        ...(image?.card ?? image ?? { src: source, width: 890, height: 676 }),
+      };
+    });
   });
   let moreProjects = $derived.by(() => {
     const index = Math.max(
@@ -241,188 +230,130 @@
 
   {#key project.slug}
     <div class="page-content">
-      <header class="project-heading">
-        <div class="eyebrow">
-          <span>PROJECT {projectNumber} / {projectCount}</span>
-          <span>{project.date}</span>
-        </div>
-        <h1 aria-label={project.name}>
-          {#each titleWords as word, index (index)}
-            <span class="title-mask" aria-hidden="true">
-              <span class="title-word" style={`--word-index:${index}`}>{word}</span>
-            </span>
-            {#if index < titleWords.length - 1}{' '}{/if}
-          {/each}
-        </h1>
+      <div class="project-layout">
+        <aside class="project-sidebar" aria-label={`${project.name} project details`}>
+          <header class="project-heading">
+            <p class="project-index">{projectNumber} / {projectCount}</p>
+            <h1 aria-label={project.name} class:long-title={longestTitleWord > 10}>
+              {#each titleWords as word, index (index)}
+                <span class="title-mask" aria-hidden="true">
+                  <span class="title-word" style={`--word-index:${index}`}>{word}</span>
+                </span>
+                {#if index < titleWords.length - 1}{' '}{/if}
+              {/each}
+            </h1>
+            <p class="project-lead">
+              {#each richSegments(project.description) as segment}
+                {#if segment.bold}
+                  <strong>{segment.text}</strong>
+                {:else if segment.underline}
+                  <span class="u">{segment.text}</span>
+                {:else}
+                  {segment.text}
+                {/if}
+              {/each}
+            </p>
+          </header>
 
-        <div class="project-intro">
-          <p class="lead">
-            {#each richSegments(project.description) as segment}
-              {#if segment.bold}
-                <strong>{segment.text}</strong>
-              {:else if segment.underline}
-                <span class="u">{segment.text}</span>
-              {:else}
-                {segment.text}
-              {/if}
-            {/each}
-          </p>
-          <div class="intro-details">
-            <div class="meta-grid">
-              <div class="meta-cell">
-                <span class="meta-label">Role</span>
-                <span class="meta-value">{caseStudy.role}</span>
-              </div>
-              <div class="meta-cell">
-                <span class="meta-label">Team</span>
-                <span class="meta-value">{caseStudy.team}</span>
-              </div>
-              <div class="meta-cell">
-                <span class="meta-label">Year</span>
-                <span class="meta-value">{project.date}</span>
-              </div>
-              <div class="meta-cell">
-                <span class="meta-label">Skills</span>
-                <span class="meta-value">{caseStudy.skills}</span>
-              </div>
+          <dl class="meta-list">
+            <div class="meta-row">
+              <dt>Role</dt>
+              <dd>{caseStudy.role}</dd>
+            </div>
+            <div class="meta-row">
+              <dt>Team</dt>
+              <dd>{caseStudy.team}</dd>
+            </div>
+            <div class="meta-row">
+              <dt>Year</dt>
+              <dd>{project.date}</dd>
+            </div>
+            <div class="meta-row">
+              <dt>Skills</dt>
+              <dd>{caseStudy.skills}</dd>
             </div>
             {#if project.website}
-              <a
-                class="website-link"
-                href={project.website}
-                target="_blank"
-                rel="noopener noreferrer"
-              >View online ↗</a>
+              <div class="meta-row">
+                <dt>Live project</dt>
+                <dd>
+                  <a href={project.website} target="_blank" rel="noopener noreferrer">
+                    View online <span aria-hidden="true">↗</span>
+                  </a>
+                </dd>
+              </div>
             {/if}
+          </dl>
+        </aside>
+
+        <div class="project-body">
+          <div
+            class="hero-media media-frame reveal"
+            style={`--media-aspect:${heroImage.width} / ${heroImage.height}`}
+          >
+            <img
+              src={heroImage.src}
+              alt={caseStudy.alt}
+              width={heroImage.width}
+              height={heroImage.height}
+              fetchpriority="high"
+              loading="eager"
+              decoding="async"
+            />
           </div>
-        </div>
-      </header>
 
-      <div
-        class="hero-media reveal"
-        style={`--media-aspect:${heroImage.width} / ${heroImage.height}`}
-      >
-        <img
-          src={heroImage.src}
-          alt={caseStudy.alt}
-          width={heroImage.width}
-          height={heroImage.height}
-          fetchpriority="high"
-          loading="eager"
-          decoding="async"
-        />
-      </div>
+          <div class="story-block">
+            <section class="story-item reveal" aria-labelledby="context-title">
+              <p class="section-label">Context</p>
+              <h2 id="context-title" class="story-context">{caseStudy.context}</h2>
+            </section>
+            <section class="story-item reveal" aria-labelledby="goal-title">
+              <p class="section-label">Goal</p>
+              <p id="goal-title" class="story-goal">{caseStudy.goal}</p>
+            </section>
+          </div>
 
-      <div class="story-rows">
-        <section class="story-row reveal" aria-labelledby="context-title">
-          <h2 id="context-title" class="story-label">
-            <span class="story-number">01</span><span>Context</span>
-          </h2>
-          <p class="story-copy">{caseStudy.context}</p>
-        </section>
-        <section class="story-row reveal" aria-labelledby="goal-title">
-          <h2 id="goal-title" class="story-label">
-            <span class="story-number">02</span><span>Goal</span>
-          </h2>
-          <p class="story-copy">{caseStudy.goal}</p>
-        </section>
-      </div>
-
-      {#if gallery.length}
-        <section class="gallery" aria-label="Project gallery">
-          {#if gallery.length === 1}
-            {#each gallery as image (image.original)}
-              <button
-                class="gallery-item reveal gallery-single"
-                type="button"
-                aria-label={`Open image ${image.index + 1} of ${gallery.length}`}
-                onclick={(event) => openLightbox(image.index, event)}
-              >
-                <span class="gallery-media" style={`--media-aspect:${image.width} / ${image.height}`}>
+          {#if gallery.length}
+            <section class="gallery" aria-label="Project gallery">
+              {#each gallery as image (image.original)}
+                <button
+                  class="gallery-item media-frame reveal"
+                  type="button"
+                  style={`--media-aspect:${image.width} / ${image.height}`}
+                  aria-label={`Open image ${image.index + 1} of ${gallery.length}`}
+                  onclick={(event) => openLightbox(image.index, event)}
+                >
                   <img
                     src={image.src}
-                    alt={caseStudy.alt}
+                    alt={image.index === 0 ? caseStudy.alt : ''}
                     width={image.width}
                     height={image.height}
                     loading="lazy"
                     decoding="async"
                   />
-                </span>
-                <span class="gallery-plus" aria-hidden="true">+</span>
-              </button>
-            {/each}
-          {:else}
-            <div class="gallery-columns">
-              {#each galleryColumns as column, columnIndex (columnIndex)}
-                <div class="gallery-column" role="group" aria-label={`Gallery column ${columnIndex + 1}`}>
-                  {#each column as image (image.original)}
-                    <button
-                      class="gallery-item reveal"
-                      type="button"
-                      aria-label={`Open image ${image.index + 1} of ${gallery.length}`}
-                      onclick={(event) => openLightbox(image.index, event)}
-                    >
-                      <span class="gallery-media" style={`--media-aspect:${image.width} / ${image.height}`}>
-                        <img
-                          src={image.src}
-                          alt={image.index === 0 ? caseStudy.alt : ''}
-                          width={image.width}
-                          height={image.height}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </span>
-                      <span class="gallery-plus" aria-hidden="true">+</span>
-                    </button>
-                  {/each}
-                </div>
-              {/each}
-            </div>
-            <div class="gallery-mobile-list">
-              {#each gallery as image (image.original)}
-                <button
-                  class="gallery-item reveal"
-                  type="button"
-                  aria-label={`Open image ${image.index + 1} of ${gallery.length}`}
-                  onclick={(event) => openLightbox(image.index, event)}
-                >
-                  <span class="gallery-media" style={`--media-aspect:${image.width} / ${image.height}`}>
-                    <img
-                      src={image.src}
-                      alt={image.index === 0 ? caseStudy.alt : ''}
-                      width={image.width}
-                      height={image.height}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </span>
-                  <span class="gallery-plus" aria-hidden="true">+</span>
                 </button>
               {/each}
-            </div>
+            </section>
           {/if}
-        </section>
-      {/if}
 
-      {#if caseStudy.results?.length}
-        <section class="story-row results-row reveal" aria-labelledby="results-title">
-          <h2 id="results-title" class="story-label">
-            <span class="story-number">03</span><span>Results</span>
-          </h2>
-          <div class="results-grid">
-            {#each caseStudy.results as result}
-              <div class="result">
-                <p class="result-value">{result.value}</p>
-                <p class="result-label">{result.label}</p>
+          {#if caseStudy.results?.length}
+            <section class="results reveal" aria-labelledby="results-title">
+              <h2 id="results-title" class="section-label">Results</h2>
+              <div class="results-grid">
+                {#each caseStudy.results as result}
+                  <div class="result">
+                    <p class="result-value">{result.value}</p>
+                    <p class="result-label">{result.label}</p>
+                  </div>
+                {/each}
               </div>
-            {/each}
-          </div>
-        </section>
-      {/if}
+            </section>
+          {/if}
+        </div>
+      </div>
 
       <section class="more-projects" aria-labelledby="more-title">
         <div class="more-header reveal">
-          <h2 id="more-title">More projects</h2>
+          <h2 id="more-title">More projects.</h2>
           <a href="/#work" class="all-works">All works</a>
         </div>
         <div class="more-grid">
@@ -442,7 +373,12 @@
           tabindex="-1"
           onclick={closeLightbox}
         ></button>
-        <div class="lightbox-dialog" role="dialog" aria-modal="true" aria-label={`${project.name} image viewer`}>
+        <div
+          class="lightbox-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${project.name} image viewer`}
+        >
           <button
             class="lightbox-close"
             type="button"
@@ -459,7 +395,7 @@
           />
           <div class="lightbox-caption">
             <span>{project.name}</span>
-            <span aria-live="polite">{lightboxIndex + 1} / {gallery.length}</span>
+            <span aria-live="polite">· {lightboxIndex + 1} / {gallery.length}</span>
           </div>
         </div>
       </div>
@@ -473,6 +409,9 @@
   .project-page {
     position: relative;
     z-index: 0;
+    min-height: 100vh;
+    background: #fafafa;
+    color: #080808;
   }
 
   .nav-island {
@@ -555,30 +494,43 @@
 
   .page-content {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1440px;
     margin: 0 auto;
-    padding: 160px 20px 136px;
+    padding: 120px 32px 136px;
   }
 
-  .eyebrow {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    opacity: 0.6;
+  .project-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 452fr) minmax(0, 837fr);
+    align-items: start;
+    column-gap: 72px;
+  }
+
+  .project-sidebar {
+    position: sticky;
+    top: 120px;
+    align-self: start;
+    min-width: 0;
+    container-type: inline-size;
+  }
+
+  .project-index {
+    color: rgba(0, 0, 0, 0.45);
     font-size: 12px;
-    letter-spacing: 0.04em;
     line-height: 1.2;
-    text-transform: uppercase;
   }
 
   .project-heading h1 {
     margin-top: 16px;
-    font-size: clamp(56px, 9vw, 128px);
+    font-size: clamp(44px, 5vw, 72px);
     font-weight: 500;
     letter-spacing: -0.03em;
-    line-height: 0.9;
-    text-align: left;
+    line-height: 1;
     text-transform: uppercase;
+  }
+
+  .project-heading h1.long-title {
+    font-size: min(72px, 12.2cqi);
   }
 
   .title-mask {
@@ -589,7 +541,7 @@
 
   .title-word {
     display: inline-block;
-    padding-bottom: 0.08em;
+    padding-bottom: 0.06em;
   }
 
   :global(#project-page.ready) .title-word {
@@ -602,193 +554,140 @@
     transition-delay: calc(var(--word-index) * 60ms);
   }
 
-  .project-intro {
-    display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    gap: 40px;
-    margin-top: 48px;
+  .project-lead {
+    max-width: 410px;
+    margin-top: 32px;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 17.6px;
+    font-weight: 400;
+    line-height: 1.5;
   }
 
-  .lead {
-    font-size: 24px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    line-height: 1.3;
-  }
-
-  .lead strong {
+  .project-lead strong {
     color: #111;
     font-weight: 500;
     -webkit-text-stroke: 0.4px currentColor;
   }
 
-  .lead .u {
+  .project-lead .u {
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
     text-decoration-color: rgb(0 0 0 / 0.3);
   }
 
-  .meta-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: 20px;
-    column-gap: 24px;
+  .meta-list {
+    margin: 40px 0 0;
+    padding: 0;
   }
 
-  .meta-cell {
+  .meta-row {
     display: flex;
-    min-width: 0;
-    flex-direction: column;
-    gap: 5px;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
 
-  .meta-label {
-    opacity: 0.55;
+  .meta-row:last-child {
+    border-bottom: 0;
+  }
+
+  .meta-row dt {
+    flex: none;
+    color: rgba(0, 0, 0, 0.5);
     font-size: 12px;
-    letter-spacing: 0.04em;
-    line-height: 1.2;
-    text-transform: uppercase;
+    line-height: 1.4;
   }
 
-  .meta-value {
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 1.35;
-    overflow-wrap: anywhere;
-  }
-
-  .website-link {
-    display: inline-block;
-    margin-top: 24px;
+  .meta-row dd {
+    max-width: 65%;
+    margin: 0;
+    color: #111;
     font-size: 14px;
-    letter-spacing: 0.04em;
-    line-height: 1.2;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    text-align: right;
+  }
+
+  .meta-row a {
     text-decoration: underline;
     text-decoration-thickness: 1px;
-    text-underline-offset: 4px;
-    text-transform: uppercase;
-    transition: opacity 0.2s;
+    text-underline-offset: 3px;
+  }
+
+  .meta-row a span {
+    margin-left: 2px;
+    text-decoration: none;
+  }
+
+  .project-body {
+    min-width: 0;
+  }
+
+  .media-frame {
+    overflow: hidden;
+    border-radius: 12px;
+    background: #efefef;
   }
 
   .hero-media {
     width: 100%;
-    margin-top: 64px;
-    aspect-ratio: var(--media-aspect);
-    overflow: hidden;
-    background: #eee;
   }
 
-  .hero-media img,
-  .gallery-media img {
+  .hero-media img {
     display: block;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
   }
 
-  .story-rows {
-    margin-top: 80px;
-  }
-
-  .story-row {
+  .story-block {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 40px;
-    padding: 48px 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    gap: 36px;
+    padding: 56px 0;
   }
 
-  .story-label {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    color: rgba(8, 8, 8, 0.6);
+  .section-label {
+    margin-bottom: 12px;
+    color: rgba(0, 0, 0, 0.45);
     font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    line-height: 1.3;
-    text-transform: uppercase;
-  }
-
-  .story-number {
-    opacity: 0.35;
-  }
-
-  .story-copy {
-    max-width: 560px;
-    font-size: 20px;
     font-weight: 400;
+    line-height: 1.3;
+  }
+
+  .story-context {
+    max-width: 550px;
+    color: #111;
+    font-size: 24px;
+    font-weight: 500;
     letter-spacing: -0.01em;
-    line-height: 1.45;
+    line-height: 1.2;
+  }
+
+  .story-goal {
+    max-width: 550px;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 17.6px;
+    font-weight: 400;
+    line-height: 1.5;
   }
 
   .gallery {
-    margin-top: 16px;
-  }
-
-  .gallery-columns {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
-    gap: 10px;
-  }
-
-  .gallery-column {
     display: flex;
-    min-width: 0;
     flex-direction: column;
-    gap: 10px;
-  }
-
-  .gallery-mobile-list {
-    display: none;
+    gap: 24px;
   }
 
   .gallery-item {
-    position: relative;
-    display: block;
-    width: 100%;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: inherit;
-    cursor: zoom-in;
-    text-align: left;
-  }
-
-  .gallery-media {
     display: block;
     width: 100%;
     aspect-ratio: var(--media-aspect);
-    overflow: hidden;
-    background: #eee;
-  }
-
-  .gallery-media img {
-    transition: transform 0.6s var(--ease-out);
-  }
-
-  .gallery-plus {
-    position: absolute;
-    z-index: 1;
-    top: 12px;
-    left: 50%;
-    display: grid;
-    width: 40px;
-    height: 40px;
-    place-items: center;
-    border-radius: 50%;
-    background: #fff;
-    color: #080808;
-    font-size: 22px;
-    line-height: 1;
-    opacity: 0;
-    transform: translateX(-50%) scale(0.85);
-    transition:
-      opacity 0.2s ease,
-      transform 0.2s var(--ease-out);
-    pointer-events: none;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    cursor: zoom-in;
+    text-align: left;
   }
 
   .gallery-item:focus-visible {
@@ -796,38 +695,53 @@
     outline-offset: 4px;
   }
 
-  .results-row {
-    margin-top: 80px;
+  .gallery-item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
 
-  .story-rows + .results-row {
-    margin-top: 0;
+  .results {
+    padding: 56px 0;
+  }
+
+  .results > .section-label {
+    margin-bottom: 24px;
   }
 
   .results-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 24px;
   }
 
+  .result {
+    min-width: 0;
+    padding-top: 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
   .result-value {
-    font-size: 40px;
+    color: #111;
+    font-size: 48px;
     font-weight: 500;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     line-height: 1;
     overflow-wrap: anywhere;
   }
 
   .result-label {
-    margin-top: 10px;
-    opacity: 0.6;
+    margin-top: 12px;
+    color: rgba(0, 0, 0, 0.6);
     font-size: 14px;
     font-weight: 400;
-    line-height: 1.35;
+    line-height: 1.4;
   }
 
   .more-projects {
-    margin-top: 144px;
+    margin-top: 160px;
   }
 
   .more-header {
@@ -838,31 +752,25 @@
   }
 
   .more-header h2 {
-    font-size: clamp(36px, 4vw, 56px);
+    font-size: clamp(36px, 4vw, 60px);
     font-weight: 500;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
     line-height: 1;
   }
 
   .all-works {
-    display: inline-flex;
-    min-height: 44px;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px;
-    border-radius: 999px;
-    background: #050505;
-    color: #f5f5f5;
-    font-size: 16px;
-    line-height: 1;
+    flex: none;
+    font-size: 14px;
+    line-height: 1.3;
+    text-decoration: none;
+    text-underline-offset: 4px;
     transition: opacity 0.2s;
-    white-space: nowrap;
   }
 
   .more-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
+    gap: 16px;
     margin-top: 40px;
   }
 
@@ -897,23 +805,17 @@
       transform: translateX(-2px);
     }
 
-    .website-link:hover {
-      opacity: 0.6;
+    .meta-row a:hover {
+      opacity: 0.65;
     }
 
-    .gallery-item:hover .gallery-media img,
-    .gallery-item:focus-visible .gallery-media img {
+    .gallery-item:hover img,
+    .gallery-item:focus-visible img {
       transform: scale(1.02);
     }
 
-    .gallery-item:hover .gallery-plus,
-    .gallery-item:focus-visible .gallery-plus {
-      opacity: 1;
-      transform: translateX(-50%) scale(1);
-    }
-
     .all-works:hover {
-      opacity: 0.85;
+      text-decoration: underline;
     }
   }
 
@@ -923,10 +825,10 @@
     inset: 0;
     display: grid;
     place-items: center;
-    padding: 20px;
-    background: rgba(250, 250, 250, 0.4);
-    -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px);
+    padding: 24px;
+    background: rgba(250, 250, 250, 0.92);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
   }
 
   .lightbox-backdrop {
@@ -945,8 +847,7 @@
     z-index: 1;
     width: fit-content;
     max-width: 90vw;
-    padding: 10px;
-    background: #fff;
+    background: transparent;
     animation: lightbox-in 0.35s var(--ease-out) both;
   }
 
@@ -954,8 +855,9 @@
     display: block;
     width: auto;
     height: auto;
-    max-width: calc(90vw - 20px);
+    max-width: 90vw;
     max-height: 72vh;
+    border-radius: 12px;
     object-fit: contain;
   }
 
@@ -963,10 +865,10 @@
     display: flex;
     justify-content: space-between;
     gap: 20px;
-    padding-top: 10px;
-    font-size: 13px;
-    letter-spacing: 0.04em;
-    line-height: 1.2;
+    margin-top: 12px;
+    color: rgba(0, 0, 0, 0.55);
+    font-size: 12px;
+    line-height: 1.3;
     text-transform: uppercase;
   }
 
@@ -980,9 +882,9 @@
     height: 40px;
     place-items: center;
     padding: 0;
-    border: 0;
+    border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 50%;
-    background: #fff;
+    background: #fafafa;
     color: #080808;
     font-size: 22px;
     line-height: 1;
@@ -1003,70 +905,34 @@
 
   @media (max-width: 809px) {
     .page-content {
-      padding-top: 120px;
+      padding: 120px 20px 136px;
+    }
+
+    .project-layout {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 48px;
+    }
+
+    .project-sidebar {
+      position: static;
+    }
+
+    .project-heading h1 {
+      font-size: clamp(40px, 10vw, 64px);
+    }
+
+    .results-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .more-grid {
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .lightbox-close {
       top: 10px;
       right: 10px;
     }
-
-    .project-intro {
-      grid-template-columns: 1fr;
-      gap: 32px;
-    }
-
-    .story-row {
-      grid-template-columns: 1fr;
-      gap: 24px;
-      padding: 32px 0;
-    }
-
-    .gallery-columns {
-      display: none;
-    }
-
-    .gallery-mobile-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .more-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 560px) {
-    .lead {
-      font-size: 22px;
-    }
-
-    .meta-grid {
-      column-gap: 16px;
-    }
-
-    .story-copy {
-      font-size: 19px;
-    }
-
-    .result-value {
-      font-size: 32px;
-    }
-
-    .lightbox {
-      padding: 10px;
-    }
-
-    .lightbox-dialog {
-      max-width: 90vw;
-    }
-
-    .lightbox-image {
-      max-width: calc(90vw - 20px);
-      max-height: 72vh;
-    }
-
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1079,32 +945,18 @@
 
     :global(#project-page.ready) .reveal,
     :global(#project-page.ready) .reveal:global(.in) {
+      opacity: 1;
       transform: none;
+      transition: none;
       --reveal-delay: 0ms;
     }
 
-    :global(#project-page.ready) .reveal:global(.in) {
-      transition:
-        opacity 0.7s ease-out 0ms,
-        transform 0.7s ease-out 0ms;
-    }
-
-    .gallery-media img {
+    .gallery-item img {
       transition: none;
     }
 
     .lightbox-dialog {
-      animation-name: lightbox-fade;
-    }
-  }
-
-  @keyframes lightbox-fade {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
+      animation: none;
     }
   }
 </style>

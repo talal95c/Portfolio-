@@ -100,7 +100,6 @@
       <div class="label svelte-17ndl8v">
         <div class="copy svelte-17ndl8v">
           <h2 data-line="" class="svelte-17ndl8v">
-            {project.name}
             {#if project.sticker}
               <img
                 class="sticker svelte-17ndl8v"
@@ -108,7 +107,7 @@
                 alt=""
                 aria-hidden="true"
               />
-            {/if}
+            {/if}{project.name}
           </h2>
           <p data-line="" class="svelte-17ndl8v">
             {#each richSegments(project.description) as segment}
@@ -186,7 +185,6 @@
       <div class="label svelte-17ndl8v">
         <div class="copy svelte-17ndl8v">
           <h2 data-line="" class="svelte-17ndl8v">
-            {project.name}
             {#if project.sticker}
               <img
                 class="sticker svelte-17ndl8v"
@@ -194,7 +192,7 @@
                 alt=""
                 aria-hidden="true"
               />
-            {/if}
+            {/if}{project.name}
           </h2>
           <p data-line="" class="svelte-17ndl8v">
             {#each richSegments(project.description) as segment}
