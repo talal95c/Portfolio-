@@ -221,8 +221,8 @@ function createMesh() {
   };
 }
 
-export function createViewportDistortion({ items }) {
-  const section = items[0]?.card.closest('#work');
+export function createViewportDistortion({ root, items }) {
+  const section = root ?? items[0]?.media.closest('#project-page');
   if (!section) return null;
 
   const canvas = document.createElement('canvas');
@@ -308,9 +308,15 @@ export function createViewportDistortion({ items }) {
   let lastY = window.scrollY;
   let velocity = 0;
 
+  function viewportSize() {
+    return {
+      width: Math.max(1, canvas.clientWidth || document.documentElement.clientWidth),
+      height: Math.max(1, canvas.clientHeight || document.documentElement.clientHeight),
+    };
+  }
+
   function resize() {
-    const width = Math.max(1, window.innerWidth);
-    const height = Math.max(1, window.innerHeight);
+    const { width, height } = viewportSize();
     const dpr = Math.max(
       0.8,
       Math.min(window.devicePixelRatio || 1, 1.35, Math.sqrt(2.6e6 / (width * height)))
@@ -331,10 +337,11 @@ export function createViewportDistortion({ items }) {
   }
 
   for (const record of records) {
+    if (!record.hoverTarget) continue;
     record.onEnter = () => setHover(record, 1);
     record.onLeave = () => setHover(record, 0);
-    record.card.addEventListener('pointerenter', record.onEnter);
-    record.card.addEventListener('pointerleave', record.onLeave);
+    record.hoverTarget.addEventListener('pointerenter', record.onEnter);
+    record.hoverTarget.addEventListener('pointerleave', record.onLeave);
   }
 
   async function loadTexture(record) {
@@ -353,7 +360,7 @@ export function createViewportDistortion({ items }) {
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, record.img);
       record.texture = texture;
       record.ready = true;
-      record.card.classList.add('gl-ready');
+      record.media.classList.add('gl-ready');
     } catch {
       record.ready = false;
     }
@@ -384,8 +391,7 @@ export function createViewportDistortion({ items }) {
     lastY = scrollY;
     lastFrame = now;
 
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    const { width, height } = viewportSize();
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.useProgram(program);
@@ -422,10 +428,10 @@ export function createViewportDistortion({ items }) {
       ) {
         continue;
       }
-      const appearAt = Number(record.card.dataset.appearAt);
+      const appearAt = Number(record.media.dataset.appearAt);
       const appearProgress = Number.isFinite(appearAt) ? clamp((now - appearAt) / 500, 0, 1) : 0;
       const appear = 1 - Math.pow(1 - appearProgress, 3);
-      const hover = hoverProgress(record, now);
+      const hover = record.hoverTarget ? hoverProgress(record, now) : 0;
       gl.uniform4f(uniforms.uRect, rect.left, rect.top, rect.width, rect.height);
       gl.uniform1f(uniforms.uAppear, appear);
       gl.uniform1f(uniforms.uOpacity, appear);
@@ -455,21 +461,27 @@ export function createViewportDistortion({ items }) {
     lastY = window.scrollY;
   }
 
+  const visibleRecords = new Set();
   const visibilityObserver = new IntersectionObserver(
     (entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) start();
+      for (const entry of entries) {
+        if (entry.isIntersecting) visibleRecords.add(entry.target);
+        else visibleRecords.delete(entry.target);
+      }
+      if (visibleRecords.size) start();
       else stop();
     },
     { rootMargin: '25% 0px' }
   );
-  visibilityObserver.observe(section);
+  records.forEach((record) => visibilityObserver.observe(record.media));
 
   function onContextLost(event) {
     event.preventDefault();
     contextLost = true;
     section.classList.remove('gl');
-    for (const record of records) record.card.classList.remove('gl-ready');
+    for (const record of records) record.media.classList.remove('gl-ready');
     stop();
+    canvas.remove();
   }
 
   canvas.addEventListener('webglcontextlost', onContextLost, false);
@@ -492,9 +504,11 @@ export function createViewportDistortion({ items }) {
       document.removeEventListener('visibilitychange', onVisibilityChange);
       canvas.removeEventListener('webglcontextlost', onContextLost, false);
       for (const record of records) {
-        record.card.removeEventListener('pointerenter', record.onEnter);
-        record.card.removeEventListener('pointerleave', record.onLeave);
-        record.card.classList.remove('gl-ready');
+        if (record.hoverTarget) {
+          record.hoverTarget.removeEventListener('pointerenter', record.onEnter);
+          record.hoverTarget.removeEventListener('pointerleave', record.onLeave);
+        }
+        record.media.classList.remove('gl-ready');
         if (record.texture && !contextLost) gl.deleteTexture(record.texture);
       }
       void Promise.all(textureLoads);

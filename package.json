@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "media": "python3 scripts/trim-media.py"
   },
   "dependencies": {
     "@dimforge/rapier3d-compat": "0.20.0",
