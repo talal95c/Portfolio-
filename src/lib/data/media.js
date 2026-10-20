@@ -5,7 +5,7 @@ export const media = {
     width: 1780,
     height: 1352,
     tone: "light",
-    card: {"src": "/work/adib/adib_cover_card.webp", "width": 284, "height": 524},
+    card: {"src": "/work/adib/adib_cover_card.webp", "width": 1780, "height": 1352},
   },
   "/work/adib/adib_screenshot_1.webp": {
     src: "/work/adib/adib_screenshot_1.webp",
@@ -13,7 +13,7 @@ export const media = {
     width: 1780,
     height: 1352,
     tone: "light",
-    card: {"src": "/work/adib/adib_screenshot_1_card.webp", "width": 261, "height": 629},
+    card: {"src": "/work/adib/adib_screenshot_1_card.webp", "width": 1780, "height": 1352},
   },
   "/work/adib/adib_screenshot_2.webp": {
     src: "/work/adib/adib_screenshot_2.webp",
@@ -21,7 +21,7 @@ export const media = {
     width: 1780,
     height: 1352,
     tone: "light",
-    card: {"src": "/work/adib/adib_screenshot_2_card.webp", "width": 293, "height": 639},
+    card: {"src": "/work/adib/adib_screenshot_2_card.webp", "width": 1780, "height": 1352},
   },
   "/work/dino-race/dino-race_cover.webp": {
     src: "/work/dino-race/dino-race_cover.webp",
