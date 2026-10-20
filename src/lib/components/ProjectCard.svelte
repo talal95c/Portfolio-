@@ -1,5 +1,6 @@
 <script>
   import { media } from '$lib/data/media.js';
+  import { plainText } from '$lib/rich.js';
 
   let { project } = $props();
   let cover = $derived(
@@ -28,7 +29,7 @@
     <h3>{project.name}</h3>
     <p>{project.tags?.[0]} · {project.date}</p>
   </div>
-  <p class="visually-hidden">{project.description}</p>
+  <p class="visually-hidden">{plainText(project.description)}</p>
 </a>
 
 <style>
