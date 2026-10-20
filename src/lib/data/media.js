@@ -76,6 +76,24 @@ export const media = {
     height: 556,
     tone: "light",
   },
+  "/work/intellectuel-athlete/intellectuel-athlete_cover.webp": {
+    src: "/work/intellectuel-athlete/intellectuel-athlete_cover.webp",
+    width: 890,
+    height: 676,
+    tone: "light",
+  },
+  "/work/intellectuel-athlete/intellectuel-athlete_screenshot_1.webp": {
+    src: "/work/intellectuel-athlete/intellectuel-athlete_screenshot_1.webp",
+    width: 890,
+    height: 676,
+    tone: "light",
+  },
+  "/work/intellectuel-athlete/intellectuel-athlete_screenshot_2.webp": {
+    src: "/work/intellectuel-athlete/intellectuel-athlete_screenshot_2.webp",
+    width: 890,
+    height: 676,
+    tone: "light",
+  },
   "/work/legible/legible_cover.webp": {
     src: "/work/legible/legible_cover_trim.webp",
     hash: "fdf74a23c6e8",

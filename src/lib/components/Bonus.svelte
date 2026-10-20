@@ -3,15 +3,6 @@
 
   const cards = [
     {
-      title: 'Intellectuel Athlète',
-      text: 'I create personal development and tech content: 14.8K followers and 2.8M views on TikTok.',
-      stickers: [
-        { src: 'brain', x: 0, y: 0, tilt: -12 },
-        { src: 'phone', x: 30, y: 16, tilt: 14, size: 26 },
-        { src: 'muscle', x: 52, y: -4, tilt: -6, size: 24 }
-      ]
-    },
-    {
       title: 'Certifications',
       text: 'CS50 from Harvard and Model Context Protocol from Anthropic.',
       stickers: [
@@ -95,7 +86,7 @@
   }
 
   .grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 48px;
     display: grid;
   }
@@ -114,10 +105,6 @@
 
   article:nth-child(3) {
     transition-delay: 140ms;
-  }
-
-  article:nth-child(4) {
-    transition-delay: 210ms;
   }
 
   .visible article {
