@@ -2,9 +2,12 @@
   import { browser } from '$app/environment';
   import { page } from '$app/state';
   import { projects } from '$lib/data/projects.js';
+  import { richSegments } from '$lib/rich.js';
 
   const featuredProjects = projects.filter((project) => project.featured);
   const afterMoreProjects = projects.filter((project) => project.afterMore);
+  const moreDescription =
+    '**MiroPolis**, **Sylo.ai**, **Dino Race**, **Wildwater** and more on GitHub.';
   const moreImages = [
     `/work/miropolis/miropolis_cover.webp`,
     `/work/sylo/sylo_cover.webp`,
@@ -96,8 +99,28 @@
     >
       <div class="label svelte-17ndl8v">
         <div class="copy svelte-17ndl8v">
-          <h2 data-line="" class="svelte-17ndl8v">{project.name}</h2>
-          <p data-line="" class="svelte-17ndl8v">{project.description}</p>
+          <h2 data-line="" class="svelte-17ndl8v">
+            {project.name}
+            {#if project.sticker}
+              <img
+                class="sticker svelte-17ndl8v"
+                src={`/stickers/${project.sticker}.svg`}
+                alt=""
+                aria-hidden="true"
+              />
+            {/if}
+          </h2>
+          <p data-line="" class="svelte-17ndl8v">
+            {#each richSegments(project.description) as segment}
+              {#if segment.bold}
+                <strong>{segment.text}</strong>
+              {:else if segment.underline}
+                <span class="u">{segment.text}</span>
+              {:else}
+                {segment.text}
+              {/if}
+            {/each}
+          </p>
           <p class="date svelte-17ndl8v" data-line="">{project.date}</p>
         </div>
         <canvas aria-hidden="true" class="svelte-17ndl8v"></canvas>
@@ -119,7 +142,17 @@
     <div class="label svelte-17ndl8v">
       <div class="copy svelte-17ndl8v">
         <h2 data-line="" class="svelte-17ndl8v">More projects</h2>
-        <p data-line="" class="svelte-17ndl8v">MiroPolis, Sylo.ai, Dino Race, Wildwater and more on GitHub.</p>
+        <p data-line="" class="svelte-17ndl8v">
+          {#each richSegments(moreDescription) as segment}
+            {#if segment.bold}
+              <strong>{segment.text}</strong>
+            {:else if segment.underline}
+              <span class="u">{segment.text}</span>
+            {:else}
+              {segment.text}
+            {/if}
+          {/each}
+        </p>
         <p class="date svelte-17ndl8v" data-line="">github.com/talal95c ↗</p>
       </div>
     </div>
@@ -152,8 +185,28 @@
     >
       <div class="label svelte-17ndl8v">
         <div class="copy svelte-17ndl8v">
-          <h2 data-line="" class="svelte-17ndl8v">{project.name}</h2>
-          <p data-line="" class="svelte-17ndl8v">{project.description}</p>
+          <h2 data-line="" class="svelte-17ndl8v">
+            {project.name}
+            {#if project.sticker}
+              <img
+                class="sticker svelte-17ndl8v"
+                src={`/stickers/${project.sticker}.svg`}
+                alt=""
+                aria-hidden="true"
+              />
+            {/if}
+          </h2>
+          <p data-line="" class="svelte-17ndl8v">
+            {#each richSegments(project.description) as segment}
+              {#if segment.bold}
+                <strong>{segment.text}</strong>
+              {:else if segment.underline}
+                <span class="u">{segment.text}</span>
+              {:else}
+                {segment.text}
+              {/if}
+            {/each}
+          </p>
           <p class="date svelte-17ndl8v" data-line="">{project.date}</p>
         </div>
         <canvas aria-hidden="true" class="svelte-17ndl8v"></canvas>

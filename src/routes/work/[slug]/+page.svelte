@@ -5,6 +5,7 @@
   import ProjectCard from '$lib/components/ProjectCard.svelte';
   import { media } from '$lib/data/media.js';
   import { projects } from '$lib/data/projects.js';
+  import { plainText, richSegments } from '$lib/rich.js';
   import '$lib/components/work.css';
 
   let { data } = $props();
@@ -204,7 +205,7 @@
   });
 </script>
 
-<Metatags title={`${project.name} — Talal Aamir`} description={project.description} />
+<Metatags title={`${project.name} — Talal Aamir`} description={plainText(project.description)} />
 
 <main id="project-page" class="project-page" bind:this={pageRoot}>
   <div class="nav-island" bind:this={navIsland}>
@@ -255,7 +256,17 @@
         </h1>
 
         <div class="project-intro">
-          <p class="lead">{project.description}</p>
+          <p class="lead">
+            {#each richSegments(project.description) as segment}
+              {#if segment.bold}
+                <strong>{segment.text}</strong>
+              {:else if segment.underline}
+                <span class="u">{segment.text}</span>
+              {:else}
+                {segment.text}
+              {/if}
+            {/each}
+          </p>
           <div class="intro-details">
             <div class="meta-grid">
               <div class="meta-cell">
@@ -603,6 +614,19 @@
     font-weight: 500;
     letter-spacing: -0.02em;
     line-height: 1.3;
+  }
+
+  .lead strong {
+    color: #111;
+    font-weight: 500;
+    -webkit-text-stroke: 0.4px currentColor;
+  }
+
+  .lead .u {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: rgb(0 0 0 / 0.3);
   }
 
   .meta-grid {

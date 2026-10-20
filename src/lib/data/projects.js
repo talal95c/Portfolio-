@@ -3,8 +3,9 @@ export const projects = [
     name: `Legible`,
     slug: `legible`,
     featured: true,
+    sticker: `medal`,
     website: `https://legible-or4n.onrender.com/`,
-    description: `A legal AI harness for French court rulings; winner of the Mistral × Stanford Law School hackathon and its Legora track.`,
+    description: `A legal AI harness for French court rulings; **winner** of the __Mistral × Stanford Law School__ hackathon and its Legora track.`,
     date: `Oct 2026`,
     tags: [`AI`, `Legal tech`, `Winner`],
     images: [
@@ -38,7 +39,7 @@ export const projects = [
     slug: `adib`,
     featured: true,
     website: `https://adib.wiki`,
-    description: `An Arabic and Quran vocabulary learning app for web and iOS; the web app reached 1,000+ users in 24 hours.`,
+    description: `An __Arabic and Quran vocabulary__ learning app for web and iOS; the web app reached **1,000+ users in 24 hours**.`,
     date: `2026`,
     tags: [`Founder`, `Web & iOS`],
     images: [
@@ -68,7 +69,7 @@ export const projects = [
     slug: `intellectuel-athlete`,
     featured: true,
     website: `https://www.tiktok.com/@intellectuelathlete`,
-    description: `A TikTok channel on mind and body, with 14.8K followers and 2.8M views in its first year.`,
+    description: `A __TikTok channel__ on mind and body, with **14.8K followers** and **2.8M views** in its first year.`,
     date: `Ongoing`,
     tags: [`Creator`, `TikTok`, `Mind & body`],
     images: [
@@ -101,7 +102,7 @@ export const projects = [
     name: `Hackathons`,
     slug: `hackathons`,
     afterMore: true,
-    description: `Winner — Mistral × Stanford Law School and Legora (Legible); Top Score — IBM × Airbus at Télécom Paris; Top Project — French National Assembly; Top 20 / 300 — Anthropic × Hugging Face.`,
+    description: `**Winner** — __Mistral × Stanford Law School and Legora (Legible)__; Top Score — IBM × Airbus at Télécom Paris; Top Project — French National Assembly; Top 20 / 300 — Anthropic × Hugging Face.`,
     date: `2026`,
     tags: [`Awards`, `Teams`],
     images: [
@@ -133,7 +134,7 @@ export const projects = [
   {
     name: `MiroPolis`,
     slug: `miropolis`,
-    description: `A multi-agent digital twin of the French National Assembly that simulates how a bill is debated and voted; top project at the French National Assembly hackathon.`,
+    description: `A __multi-agent digital twin__ of the French National Assembly that simulates how a bill is debated and voted; **top project** at the French National Assembly hackathon.`,
     date: `Jul 2026`,
     tags: [`AI`, `Multi-agent`, `Top project`],
     images: [
@@ -162,7 +163,7 @@ export const projects = [
     name: `Sylo.ai`,
     slug: `sylo`,
     website: `https://sylo-0wck.onrender.com/demo`,
-    description: `A Secure Horizons hackathon project for cross-border B2B payment routing and fraud detection.`,
+    description: `A __Secure Horizons hackathon project__ for **cross-border B2B payment routing and fraud detection**.`,
     date: `Oct 2026`,
     tags: [`Fintech`, `Hackathon`],
     images: [
@@ -189,7 +190,7 @@ export const projects = [
   {
     name: `Dino Race`,
     slug: `dino-race`,
-    description: `A 3D multiplayer browser racing game with a live AI soundtrack, built at the Google × Voodoo hackathon.`,
+    description: `A __3D multiplayer browser racing game__ with a live AI soundtrack, **built at the Google × Voodoo hackathon**.`,
     date: `Sep 2026`,
     tags: [`Game`, `Hackathon`],
     images: [
@@ -220,7 +221,7 @@ export const projects = [
   {
     name: `Wildwater`,
     slug: `wildwater`,
-    description: `A C and Shell data pipeline that processes 2M+ lines of water-network data under strict memory limits.`,
+    description: `A __C and Shell data pipeline__ that processes **2M+ lines of water-network data** under strict memory limits.`,
     date: `2025`,
     tags: [`C`, `Data pipeline`],
     images: [
