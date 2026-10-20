@@ -57,12 +57,17 @@
     <p class="intro svelte-1uha8ag">
       I build and learn. <button type="button" class="more svelte-1uha8ag" aria-haspopup="dialog" onclick={() => (aboutOpen = true)}>[more]</button>
       <button type="button" class="cv-note" tabindex="-1" aria-hidden="true" onclick={() => (aboutOpen = true)}>
-        <svg viewBox="0 0 120 84" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="arrow-svg" viewBox="0 0 120 84" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
           <path class="draw arrow" pathLength="1" d="M74 52c-14-4-30-14-44-34" />
           <path class="draw head" pathLength="1" d="M27 29l2-12 11 4" />
-          <path class="draw ring" pathLength="1" d="M86 46c-12 1-21 9-20 17 1 9 13 14 26 12 13-2 21-10 19-18-2-8-13-12-25-10-4 1-7 2-9 4" />
         </svg>
-        <span>CV</span>
+        <span class="label">
+          click there!
+          <svg class="ring" viewBox="0 0 100 40" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+            <path class="draw" pathLength="1" vector-effect="non-scaling-stroke" d="M62 4C30 2 4 10 4 21c0 10 20 16 46 16 27 0 46-7 46-17C96 10 78 3 52 4c-6 0-11 1-15 3" />
+          </svg>
+          <img class="emoji" src="/stickers/point.svg" alt="" />
+        </span>
       </button>
     </p>
     <p class="education svelte-1uha8ag">
@@ -86,6 +91,12 @@
 <AboutDialog bind:open={aboutOpen} />
 
 <style>
+  @font-face {
+    font-family: 'Gochi Hand';
+    src: url('/fonts/gochi-hand.woff2') format('woff2');
+    font-display: swap;
+  }
+
   .cv-note {
     pointer-events: none;
     color: #2142b8;
@@ -101,34 +112,40 @@
     left: calc(100% - 52px);
   }
 
-  .cv-note svg {
+  .arrow-svg {
     width: 100%;
     height: 100%;
     overflow: visible;
+    transition: transform 0.4s cubic-bezier(0.34, 1.7, 0.5, 1);
   }
 
-  .cv-note span {
+  .label {
     pointer-events: auto;
-    padding: 4px 8px;
-    margin: -4px -8px;
-    font-style: italic;
-    font-size: 15px;
-    letter-spacing: 0.02em;
+    white-space: nowrap;
+    font-family: 'Gochi Hand', 'Comic Sans MS', cursive;
+    font-size: 19px;
+    line-height: 1;
+    padding: 9px 14px;
     position: absolute;
-    top: 51px;
-    left: 79px;
-    transition: transform 0.4s cubic-bezier(0.34, 1.7, 0.5, 1);
-    animation: cv-in 0.4s 1.35s var(--ease-out) both;
+    top: 46px;
+    left: 62px;
+    transform: rotate(-4deg);
+    transition: transform 0.45s cubic-bezier(0.34, 1.7, 0.5, 1);
+    animation: cv-in 0.4s 0.2s var(--ease-out) both;
+  }
+
+  .ring {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    overflow: visible;
   }
 
   .draw {
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
-    animation: cv-draw 0.55s var(--ease-out) forwards;
-  }
-
-  .ring {
-    animation-delay: 0.6s;
+    animation: cv-draw 0.55s 0.5s var(--ease-out) forwards;
   }
 
   .arrow {
@@ -140,19 +157,41 @@
     animation-duration: 0.25s;
   }
 
-  .cv-note svg {
-    transition: transform 0.4s cubic-bezier(0.34, 1.7, 0.5, 1);
+  .emoji {
+    pointer-events: none;
+    opacity: 0;
+    width: 26px;
+    height: 26px;
+    filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff)
+      drop-shadow(1px 1px 0 #fff) drop-shadow(-1px -1px 0 #fff) drop-shadow(0 3px 5px #0000002e);
+    position: absolute;
+    bottom: calc(100% - 8px);
+    right: -14px;
+    transform-origin: 50% 100%;
+    transform: translateY(8px) scale(0.3) rotate(-30deg);
+    transition:
+      transform 0.18s ease-in,
+      opacity 0.12s ease-in;
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .cv-note:hover svg,
-    :global(.more:hover) ~ .cv-note svg {
+    .label:hover,
+    :global(.more:hover) ~ .cv-note .label {
+      transform: rotate(3deg) scale(1.1);
+    }
+
+    .label:hover ~ .arrow-svg,
+    :global(.more:hover) ~ .cv-note .arrow-svg {
       transform: translate(-3px, -3px);
     }
 
-    .cv-note:hover span,
-    :global(.more:hover) ~ .cv-note span {
-      transform: rotate(-8deg) scale(1.1);
+    .label:hover .emoji,
+    :global(.more:hover) ~ .cv-note .emoji {
+      opacity: 1;
+      transform: translateY(0) scale(1) rotate(14deg);
+      transition:
+        transform 0.5s cubic-bezier(0.34, 1.7, 0.5, 1),
+        opacity 0.15s ease-out;
     }
   }
 
@@ -165,7 +204,7 @@
   @keyframes cv-in {
     from {
       opacity: 0;
-      transform: scale(0.6);
+      transform: rotate(-4deg) scale(0.6);
     }
   }
 
@@ -203,7 +242,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .draw,
-    .cv-note span {
+    .label {
       animation: none;
       stroke-dashoffset: 0;
     }
