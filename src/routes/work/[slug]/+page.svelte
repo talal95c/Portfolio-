@@ -191,3 +191,17 @@
 </main>
 
 <Footer />
+
+<style>
+  nav.svelte-9hm5jc {
+    background: rgba(250, 250, 250, 0.72);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    backdrop-filter: blur(24px) saturate(180%);
+  }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    nav.svelte-9hm5jc {
+      background: rgba(250, 250, 250, 0.92);
+    }
+  }
+</style>

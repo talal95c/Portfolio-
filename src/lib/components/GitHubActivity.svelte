@@ -32,6 +32,7 @@
       new Intl.DateTimeFormat('en', { month: 'short', timeZone: 'UTC' }).format(date);
     const last = new Date(start.getTime() + 53 * 7 * day);
     const months = [];
+    let previousWeek = -3;
     for (
       let date = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), 1));
       date < last;
@@ -41,7 +42,10 @@
       firstSunday.setUTCDate(firstSunday.getUTCDate() + ((7 - firstSunday.getUTCDay()) % 7));
       while (firstSunday < start) firstSunday.setUTCDate(firstSunday.getUTCDate() + 7);
       const week = Math.floor((firstSunday.getTime() - start.getTime()) / (7 * day));
-      if (week < 53) months.push({ week, label: monthLabel(date) });
+      if (week < 53 && week - previousWeek >= 3) {
+        months.push({ week, label: monthLabel(date) });
+        previousWeek = week;
+      }
     }
 
     return { weeks, months };
@@ -175,18 +179,20 @@
   }
 
   .calendar {
-    width: max-content;
+    width: 100%;
+    min-width: 738px;
   }
 
   .months,
   .weeks {
-    column-gap: 3px;
-    grid-template-columns: repeat(53, 11px);
+    gap: 4px;
+    grid-template-columns: repeat(53, minmax(10px, 1fr));
     display: grid;
   }
 
   .months {
     min-height: 16px;
+    grid-auto-flow: column;
     align-items: end;
     color: #5b5864;
     font-size: 12px;
@@ -195,20 +201,26 @@
 
   .month {
     white-space: nowrap;
-    transform: translateX(5px);
   }
 
   .weeks {
     margin-top: 7px;
+    grid-template-rows: repeat(7, minmax(10px, 1fr));
+    grid-auto-flow: column;
   }
 
   .week {
-    grid-template-rows: repeat(7, 11px);
-    row-gap: 3px;
-    display: grid;
+    display: contents;
   }
 
-  .cell,
+  .cell {
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--cell-color);
+    border-radius: 3px;
+    display: block;
+  }
+
   .legend-cell {
     width: 11px;
     height: 11px;
@@ -219,6 +231,7 @@
 
   .activity-meta {
     margin-top: 24px;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
