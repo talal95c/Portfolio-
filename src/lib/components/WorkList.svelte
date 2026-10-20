@@ -119,7 +119,7 @@
           </span>
         </div>
         <ul class="tags">
-          {#each [project.date, ...project.tags] as tag}
+          {#each [project.date, ...(project.tags ?? [])] as tag}
             <li>{tag}</li>
           {/each}
         </ul>
