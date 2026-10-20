@@ -619,6 +619,7 @@
   .lead strong {
     color: #111;
     font-weight: 500;
+    -webkit-text-stroke: 0.4px currentColor;
   }
 
   .lead .u {
