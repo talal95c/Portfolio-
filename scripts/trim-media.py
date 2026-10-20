@@ -128,11 +128,18 @@ def main():
     for path in sources:
         try:
             with Image.open(path) as source:
-                image = source.convert("RGB")
+                rgba = source.convert("RGBA")
+                has_alpha = rgba.getchannel("A").getextrema()[0] < 255
+                image = rgba if has_alpha else source.convert("RGB")
         except (OSError, ValueError):
             continue
 
-        if path.stem.endswith("_poster"):
+        if has_alpha:
+            top = bottom = left = right = 0
+            output_path = path
+            for suffix in ("_trim.webp", "_card.webp"):
+                path.with_name(f"{path.stem}{suffix}").unlink(missing_ok=True)
+        elif path.stem.endswith("_poster"):
             top = bottom = left = right = 0
             output_path = path
         else:
@@ -148,12 +155,22 @@ def main():
                 )
 
         with Image.open(output_path) as result:
-            result = result.convert("RGB")
+            if has_alpha:
+                result = result.convert("RGBA")
+                matte = Image.new("RGBA", result.size, "#fafafa")
+                matte.alpha_composite(result)
+                tone_image = matte.convert("RGB")
+            else:
+                tone_image = result.convert("RGB")
             width, height = result.size
-            luminance = mean_relative_luminance(result)
+            luminance = mean_relative_luminance(tone_image)
             tone = "dark" if luminance < 0.5 else "light"
 
-        if path.stem.endswith("_poster"):
+        if has_alpha:
+            card_path = path
+            card = image
+            frame_info = "alpha"
+        elif path.stem.endswith("_poster"):
             card_path = path
             card = image
             frame_info = "poster"
@@ -163,21 +180,26 @@ def main():
             card.save(card_path, "WEBP", quality=90, method=6)
 
         source_url = public_path(path)
-        manifest[source_url] = {
+        entry = {
             "src": public_path(output_path),
             "hash": hashlib.sha1(path.read_bytes()).hexdigest()[:12],
             "width": width,
             "height": height,
             "tone": tone,
-            "card": {
-                "src": public_path(card_path),
-                "width": card.width,
-                "height": card.height,
-            },
         }
+        if has_alpha:
+            entry["alpha"] = True
+        entry["card"] = {
+            "src": public_path(card_path),
+            "width": card.width,
+            "height": card.height,
+        }
+        manifest[source_url] = entry
         trim = f"top={top} bottom={bottom} left={left} right={right}" if any((top, bottom, left, right)) else "none"
         if frame_info is None:
             card_trim = "no corner frame"
+        elif frame_info == "alpha":
+            card_trim = "alpha source kept as card"
         elif frame_info == "poster":
             card_trim = "poster kept as card"
         else:

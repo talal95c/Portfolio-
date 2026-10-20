@@ -22,6 +22,7 @@
     return {
       original: source,
       ...(image?.card ?? image ?? { src: source, width: 890, height: 676 }),
+      alpha: image?.alpha === true,
     };
   });
   let gallery = $derived.by(() => {
@@ -47,6 +48,7 @@
         original: source,
         index,
         ...(image?.card ?? image ?? { src: source, width: 890, height: 676 }),
+        alpha: image?.alpha === true,
       };
     });
   });
@@ -288,6 +290,7 @@
         <div class="project-body">
           <div
             class="hero-media media-frame reveal"
+            class:media-alpha={heroImage.alpha}
             style={`--media-aspect:${heroImage.width} / ${heroImage.height}`}
           >
             <img
@@ -317,6 +320,7 @@
               {#each gallery as image (image.original)}
                 <button
                   class="gallery-item media-frame reveal"
+                  class:media-alpha={image.alpha}
                   type="button"
                   style={`--media-aspect:${image.width} / ${image.height}`}
                   aria-label={`Open image ${image.index + 1} of ${gallery.length}`}
@@ -388,6 +392,7 @@
           >×</button>
           <img
             class="lightbox-image"
+            class:media-alpha={gallery[lightboxIndex].alpha}
             src={gallery[lightboxIndex].src}
             alt={lightboxIndex === 0 ? caseStudy.alt : ''}
             width={gallery[lightboxIndex].width}
@@ -632,6 +637,10 @@
     background: #efefef;
   }
 
+  .media-frame.media-alpha {
+    background: transparent;
+  }
+
   .hero-media {
     width: 100%;
   }
@@ -701,6 +710,10 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .gallery-item.media-alpha img {
+    object-fit: contain;
   }
 
   .results {
@@ -814,6 +827,11 @@
       transform: scale(1.02);
     }
 
+    .gallery-item.media-alpha:hover img,
+    .gallery-item.media-alpha:focus-visible img {
+      transform: none;
+    }
+
     .all-works:hover {
       text-decoration: underline;
     }
@@ -859,6 +877,10 @@
     max-height: 72vh;
     border-radius: 12px;
     object-fit: contain;
+  }
+
+  .lightbox-image.media-alpha {
+    background: transparent;
   }
 
   .lightbox-caption {
