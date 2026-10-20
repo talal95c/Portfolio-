@@ -3,9 +3,9 @@
 
   const stats = [
     { value: 'Top 5%', label: 'engineering cycle, CY Tech', tint: '#eeebfa' },
-    { value: 'Top 20%', label: 'in maths, integrated prépa', tint: '#e9f6ee' },
     { value: '3 years', label: 'AI apprenticeship at Safran', tint: '#e8f1fb' },
-    { value: '4', label: 'hackathon podiums', tint: '#fdeee6' }
+    { value: '4', label: 'hackathon podiums', tint: '#fdeee6' },
+    { value: '2', label: 'certifications, Harvard & Anthropic', tint: '#e9f6ee' }
   ];
 
   const timeline = [
@@ -13,7 +13,7 @@
       title: 'Education',
       items: [
         { years: '2026 – 2029', company: 'CY Tech, Paris', role: 'Engineering cycle', emoji: 'laptop', note: 'Master of Engineering in Computer Science, top 5% of the cohort. Apprenticeship with Safran.' },
-        { years: '2024 – 2026', company: 'CY Tech, Paris', role: 'Integrated prépa', emoji: 'ruler', note: 'Two-year preparatory cycle in maths, physics and computer science, top 20% in mathematics.' }
+        { years: '2024 – 2026', company: 'CY Tech, Paris', role: 'Integrated prépa', emoji: 'ruler', note: 'Two-year preparatory cycle in maths, physics and computer science.' }
       ]
     },
     {
@@ -81,7 +81,7 @@
     <div class="block" style="--i: 0">
       <p class="lead">Computer science engineering student at <strong>CY Tech, Paris</strong>, and AI engineer apprentice at <strong>Safran Aircraft Engines</strong>.</p>
       <div class="bio">
-        <p>After two years of integrated prépa at CY Tech, finished in the top 20% in mathematics, I joined the computer science engineering cycle, where I rank in the top 5%.</p>
+        <p>After two years of integrated prépa at CY Tech, I joined the computer science engineering cycle, where I rank in the top 5%.</p>
         <p>In parallel, at Safran, I design and ship agentic AI that automates sales administration, from the model to the tools teams already use. In hackathons, <strong>Legible</strong>, my legal AI harness, won the Mistral × Stanford Law School hackathon and its Legora track.</p>
       </div>
     </div>
