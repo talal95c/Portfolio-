@@ -198,6 +198,7 @@ canvas.svelte-17ndl8v {
   background: none;
   border: 0;
   border-radius: 0;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08));
 }
 .preview-0.svelte-17ndl8v {
   top: 0;
