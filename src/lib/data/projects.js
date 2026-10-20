@@ -60,6 +60,7 @@ export const projects = [
     slug: `miropolis`,
     description: `A multi-agent digital twin of the French National Assembly that simulates how a bill is debated and voted; top project at the French National Assembly hackathon.`,
     date: `Jul 2026`,
+    tags: [`AI`, `Multi-agent`, `Top project`],
     images: [
       `/work/miropolis/miropolis_cover.webp`,
       `/work/miropolis/miropolis_screenshot_1.webp`,
@@ -114,6 +115,7 @@ export const projects = [
     slug: `dino-race`,
     description: `A 3D multiplayer browser racing game with a live AI soundtrack, built at the Google × Voodoo hackathon.`,
     date: `Sep 2026`,
+    tags: [`Game`, `Hackathon`],
     images: [
       `/work/dino-race/dino-race_cover.webp`,
       `/work/dino-race/dino-race_screenshot_1.webp`,
@@ -140,6 +142,7 @@ export const projects = [
     slug: `wildwater`,
     description: `A C and Shell data pipeline that processes 2M+ lines of water-network data under strict memory limits.`,
     date: `2025`,
+    tags: [`C`, `Data pipeline`],
     images: [
       `/work/wildwater/wildwater_cover.webp`,
       `/work/wildwater/wildwater_screenshot_1.webp`,
