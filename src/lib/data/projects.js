@@ -107,7 +107,7 @@ export const projects = [
     },
   },
   {
-    name: `Dino Race Fight Club`,
+    name: `Dino Race`,
     slug: `dino-race`,
     description: `A 3D multiplayer browser racing game with a live AI soundtrack, built at the Google × Voodoo hackathon.`,
     date: `Sep 2026`,
