@@ -1,6 +1,7 @@
 <script>
   import { browser } from '$app/environment';
   import { page } from '$app/state';
+  import { media } from '$lib/data/media.js';
   import { projects } from '$lib/data/projects.js';
   import { richSegments } from '$lib/rich.js';
 
@@ -126,7 +127,14 @@
       </div>
       <div class="previews svelte-17ndl8v" aria-hidden="true">
         {#each project.images as src, n}
-          <img class="preview preview-{n} svelte-17ndl8v" {src} alt="" width="890" height="676" />
+          <img
+            class="preview preview-{n} svelte-17ndl8v"
+            class:preview-bare={media[src]?.alpha}
+            {src}
+            alt=""
+            width="890"
+            height="676"
+          />
         {/each}
       </div>
     </a>
@@ -211,7 +219,14 @@
       </div>
       <div class="previews svelte-17ndl8v" aria-hidden="true">
         {#each project.images as src, n}
-          <img class="preview preview-{n} svelte-17ndl8v" {src} alt="" width="890" height="676" />
+          <img
+            class="preview preview-{n} svelte-17ndl8v"
+            class:preview-bare={media[src]?.alpha}
+            {src}
+            alt=""
+            width="890"
+            height="676"
+          />
         {/each}
       </div>
     </a>

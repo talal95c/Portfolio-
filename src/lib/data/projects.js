@@ -28,9 +28,9 @@ export const projects = [
       ],
       alt: `Legible checking an AI draft against the speaker-attributed ruling.`,
       media: [
-        { src: `/work/hackathons/legible_screenshot.webp`, frame: true },
-        `/work/legible/legible_screenshot_2.webp`,
         `/work/legible/legible_cover.webp`,
+        `/work/legible/legible_screenshot_1.webp`,
+        `/work/legible/legible_screenshot_2.webp`,
       ],
       contextImage: `/work/legible/legible_screenshot_1.webp`,
       heroImages: [

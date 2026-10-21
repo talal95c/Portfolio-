@@ -261,6 +261,7 @@
         <div class="project-body">
           <div
             class="hero-media media-frame reveal"
+            class:media-alpha={heroImage.alpha}
           >
             <img
               src={heroImage.src}
@@ -289,6 +290,7 @@
               {#each gallery as image (image.original)}
                 <button
                   class="gallery-item media-frame reveal"
+                  class:media-alpha={image.alpha}
                   type="button"
                   aria-label={`Open image ${image.index + 1} of ${gallery.length}`}
                   onclick={(event) => openLightbox(image.index, event)}
@@ -359,6 +361,7 @@
           >×</button>
           <img
             class="lightbox-image"
+            class:media-alpha={gallery[lightboxIndex].alpha}
             src={gallery[lightboxIndex].src}
             alt={lightboxIndex === 0 ? caseStudy.alt : ''}
             width={gallery[lightboxIndex].width}
@@ -607,6 +610,18 @@
     background: #f0f0f0;
   }
 
+  .media-frame.media-alpha {
+    background: transparent;
+  }
+
+  .media-frame.media-alpha img {
+    width: 88%;
+    max-height: 92%;
+    border-radius: 0;
+    box-shadow: none;
+    filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.07));
+  }
+
   .media-frame img {
     display: block;
     width: 76%;
@@ -670,6 +685,10 @@
 
   .gallery-item img {
     transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .gallery-item.media-alpha img {
+    object-fit: contain;
   }
 
   .results {
@@ -783,6 +802,11 @@
       transform: scale(1.03);
     }
 
+    .gallery-item.media-alpha:hover img,
+    .gallery-item.media-alpha:focus-visible img {
+      transform: none;
+    }
+
     .all-works:hover {
       text-decoration: underline;
     }
@@ -828,6 +852,10 @@
     max-height: 72vh;
     border-radius: 12px;
     object-fit: contain;
+  }
+
+  .lightbox-image.media-alpha {
+    background: transparent;
   }
 
   .lightbox-caption {

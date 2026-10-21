@@ -193,6 +193,13 @@ canvas.svelte-17ndl8v {
   position: absolute;
   transform: translateY(64px) rotate(0) scale(0.95);
 }
+.preview-bare.svelte-17ndl8v {
+  object-fit: contain;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08));
+}
 .preview-0.svelte-17ndl8v {
   top: 0;
   right: calc(2 * max(0px, min(225px, 50% - 125px)));
