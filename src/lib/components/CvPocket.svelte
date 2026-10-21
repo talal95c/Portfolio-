@@ -27,7 +27,8 @@
     const to = sheet.getBoundingClientRect();
     const dx = from.left + from.width / 2 - (to.left + to.width / 2);
     const dy = from.top + from.height / 2 - (to.top + to.height / 2);
-    return `translate(${dx}px, ${dy}px) scale(${card.offsetWidth / sheet.offsetWidth}) rotate(3deg)`;
+    const s = parseFloat(getComputedStyle(card).getPropertyValue('--s')) || 0.44;
+    return `translate(${dx}px, ${dy}px) scale(${(card.offsetWidth * s) / sheet.offsetWidth}) rotate(3deg)`;
   }
 
   async function view() {
