@@ -1,13 +1,9 @@
 <script>
-  import { media } from '$lib/data/media.js';
   import { plainText } from '$lib/rich.js';
+  import { workMedia } from '$lib/workMedia.js';
 
   let { project } = $props();
-  let coverSource = $derived(project.caseStudy?.poster ?? project.images[0]);
-  let cover = $derived.by(() => {
-    const image = media[coverSource];
-    return image?.card ?? image ?? { src: coverSource, width: 890, height: 676 };
-  });
+  let cover = $derived(workMedia(project)[0]);
 </script>
 
 <a class="project-card" href="/work/{project.slug}">
@@ -36,18 +32,25 @@
   }
 
   .card-media {
+    display: grid;
     width: 100%;
     aspect-ratio: 673 / 550;
+    place-items: center;
     overflow: hidden;
     border-radius: 12px;
-    background: #efefef;
+    background: #f0f0f0;
   }
 
   .card-media img {
     display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 74%;
+    height: auto;
+    max-height: 76%;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 12px 32px rgba(0, 0, 0, 0.07);
     transition: transform 0.8s var(--ease-out);
   }
 
