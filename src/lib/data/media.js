@@ -90,6 +90,15 @@ export const media = {
     tone: "light",
     card: {"src": "/work/hackathons/legible_screenshot_card.webp", "width": 680, "height": 511},
   },
+  "/work/intellectuel-athlete/intellectuel-athlete_composite.webp": {
+    src: "/work/intellectuel-athlete/intellectuel-athlete_composite.webp",
+    hash: "9b489d08e5cf",
+    width: 1800,
+    height: 900,
+    tone: "light",
+    alpha: true,
+    card: {"src": "/work/intellectuel-athlete/intellectuel-athlete_composite.webp", "width": 1800, "height": 900},
+  },
   "/work/intellectuel-athlete/intellectuel-athlete_cover.webp": {
     src: "/work/intellectuel-athlete/intellectuel-athlete_cover_trim.webp",
     hash: "cb30f8c9193b",
@@ -97,14 +106,6 @@ export const media = {
     height: 596,
     tone: "dark",
     card: {"src": "/work/intellectuel-athlete/intellectuel-athlete_cover_card.webp", "width": 455, "height": 523},
-  },
-  "/work/intellectuel-athlete/intellectuel-athlete_poster.webp": {
-    src: "/work/intellectuel-athlete/intellectuel-athlete_poster.webp",
-    hash: "b34bb6252ed5",
-    width: 1600,
-    height: 1200,
-    tone: "light",
-    card: {"src": "/work/intellectuel-athlete/intellectuel-athlete_poster.webp", "width": 1600, "height": 1200},
   },
   "/work/intellectuel-athlete/intellectuel-athlete_screenshot_1.webp": {
     src: "/work/intellectuel-athlete/intellectuel-athlete_screenshot_1_trim.webp",
