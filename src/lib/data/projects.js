@@ -125,7 +125,6 @@ export const projects = [
       `/work/intellectuel-athlete/intellectuel-athlete_screenshot_2.webp`,
     ],
     caseStudy: {
-      poster: `/work/intellectuel-athlete/intellectuel-athlete_poster.webp`,
       gallery: false,
       color: `#efe3f7`,
       selection: `#f7f0fb`,
@@ -139,9 +138,9 @@ export const projects = [
         { value: `14.8K`, label: `Followers` },
         { value: `389.8K`, label: `Likes in the past year` },
       ],
-      alt: `2.8 million views in one year for the Intellectuel Athlète TikTok channel.`,
+      alt: `Intellectuel Athlète TikTok profile with its yearly views and follower growth.`,
       media: [
-        `/work/intellectuel-athlete/intellectuel-athlete_poster.webp`,
+        `/work/intellectuel-athlete/intellectuel-athlete_composite.webp`,
       ],
       contextImage: `/work/intellectuel-athlete/intellectuel-athlete_screenshot_1.webp`,
       heroImages: [

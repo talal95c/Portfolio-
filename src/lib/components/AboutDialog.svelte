@@ -80,13 +80,21 @@
 
     <div class="block" style="--i: 0">
       <p class="lead">Computer science engineering student at <strong>CY Tech, Paris</strong>, and AI engineer apprentice at <strong>Safran Aircraft Engines</strong>.</p>
+    </div>
+
+    <div class="headshot svelte-7hpc9t block" style="--i: 1">
+      <img src="/assets/talal-hackathon.webp" alt="Talal, in white, at a hackathon, working on a laptop with a teammate." width="1200" height="800" loading="eager" decoding="async" class="svelte-7hpc9t" />
+      <img class="subject svelte-7hpc9t" src="/assets/talal-hackathon-subject.webp" alt="" width="1200" height="800" loading="eager" decoding="async" />
+    </div>
+
+    <div class="block" style="--i: 2">
       <div class="bio">
         <p>After two years of integrated prépa at CY Tech, I joined the computer science engineering cycle, where I rank in the top 5%.</p>
         <p>At Safran Aircraft Engines, I research AI solutions to real operational problems: I frame the question, compare approaches on real data and ship what holds up. Outside work, I solve a machine-learning problem every day from the mathematics up and run my own experiments, such as uncertainty-aware remaining-useful-life prediction for turbofan engines. Hackathons come second, as a place to test ideas against a deadline; <strong>Legible</strong> won the Mistral × Stanford Law School hackathon.</p>
       </div>
     </div>
 
-    <ul class="stats block" style="--i: 1">
+    <ul class="stats block" style="--i: 3">
       {#each stats as stat (stat.label)}
         <li style={`--tint:${stat.tint}`}><span class="value">{stat.value}</span><span class="label">{stat.label}</span></li>
       {/each}
@@ -94,7 +102,7 @@
 
 
     {#each timeline as group, groupIndex (group.title)}
-      <section class="block" style={`--i: ${groupIndex + 2}`} aria-labelledby={`about-${group.title.toLowerCase()}`}>
+      <section class="block" style={`--i: ${groupIndex + 4}`} aria-labelledby={`about-${group.title.toLowerCase()}`}>
         <h3 id={`about-${group.title.toLowerCase()}`}>{group.title}</h3>
         <ol>
           {#each group.items as item (item.company + item.role)}
@@ -113,14 +121,22 @@
       </section>
     {/each}
 
-    <div class="headshot svelte-7hpc9t block" style={`--i: ${timeline.length + 2}`}>
-      <img src="/assets/talal-hackathon.webp" alt="Talal, in white, at a hackathon, working on a laptop with a teammate." width="1200" height="800" loading="lazy" decoding="async" class="svelte-7hpc9t" />
-      <img class="subject svelte-7hpc9t" src="/assets/talal-hackathon-subject.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" />
-    </div>
   </div>
 </dialog>
 
 <style>
+  .headshot {
+    flex-shrink: 0 !important;
+    width: min(100%, 300px) !important;
+    min-height: 0 !important;
+    margin: -16px 0 !important;
+    border-radius: 14px !important;
+  }
+
+  .headshot img {
+    border-radius: 14px !important;
+  }
+
   .panel {
     justify-content: flex-start !important;
     gap: 44px !important;
@@ -157,7 +173,7 @@
   }
 
   .bio {
-    margin-top: 20px;
+    margin-top: 0;
   }
 
   .bio p {
