@@ -9,6 +9,7 @@
   import Bonus from '$lib/components/Bonus.svelte';
   import GitHubActivity from '$lib/components/GitHubActivity.svelte';
   import AboutDialog from '$lib/components/AboutDialog.svelte';
+  import CvPocket from '$lib/components/CvPocket.svelte';
   import '$lib/styles/home.css';
 
   let { data } = $props();
@@ -89,6 +90,7 @@
 </main>
 <Footer />
 <AboutDialog bind:open={aboutOpen} />
+<CvPocket />
 
 <style>
   @font-face {
