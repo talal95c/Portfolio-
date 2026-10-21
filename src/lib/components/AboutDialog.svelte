@@ -12,14 +12,14 @@
     {
       title: 'Education',
       items: [
-        { years: '2026 – 2029', company: 'CY Tech, Paris', role: 'Engineering cycle', emoji: 'laptop', note: 'Master of Engineering in Computer Science, top 5% of the cohort. Apprenticeship with Safran.' },
+        { years: '2026 – 2029', company: 'CY Tech, Paris', role: 'Engineering cycle', emoji: 'laptop', note: 'Master of Engineering in Computer Science, machine learning specialisation, top 5% of the cohort. Apprenticeship with Safran.' },
         { years: '2024 – 2026', company: 'CY Tech, Paris', role: 'Integrated prépa', emoji: 'ruler', note: 'Two-year preparatory cycle in maths, physics and computer science.' }
       ]
     },
     {
       title: 'Experience',
       items: [
-        { years: '2026 – 2029', company: 'Safran Aircraft Engines', role: 'AI Engineer', emoji: 'plane', note: 'Apprenticeship. Agentic AI that automates sales administration, connecting generative AI to existing business tools and data. Working with business teams in Montereau-sur-le-Jard to identify and prioritise use cases.' }
+        { years: '2026 – 2029', company: 'Safran Aircraft Engines', role: 'AI Engineer, Applied Research', emoji: 'plane', note: 'Apprenticeship. Agentic AI that automates sales administration, connecting generative AI to existing business tools and data. Working with business teams in Montereau-sur-le-Jard to identify and prioritise use cases.' }
       ]
     },
     {
