@@ -7,10 +7,10 @@
     katex.renderToString(tex, { displayMode: true, throwOnError: false, output: 'html' });
 
   const equations = {
-    leastSquares: renderEquation(String.raw`\begin{aligned}
-      \nabla_\theta \lVert X\theta - y \rVert^2 &= 2X^\top(X\theta - y) = 0 \\
-      &\;\Rightarrow\; \theta^\ast = (X^\top X)^{-1}X^\top y
-    \end{aligned}`),
+    leastSquares: renderEquation(String.raw`\begin{gathered}
+      \nabla_\theta \lVert X\theta - y \rVert^2 = 2X^\top(X\theta - y) = 0 \\
+      \theta^\ast = (X^\top X)^{-1}X^\top y
+    \end{gathered}`),
     minibatches: renderEquation(String.raw`\operatorname{Var}\big[\hat g_B\big] = \frac{\sigma^2}{B}`),
     backpropagation: renderEquation(String.raw`\begin{aligned}
       \delta^{(2)} &= A^{(2)} - Y, \\
@@ -18,37 +18,21 @@
     \end{aligned}`)
   };
 
+  const progressUrl = 'https://raw.githubusercontent.com/talal95c/deep-ml/main/progress.json';
+
   let { deepMl = { items: {} } } = $props();
+  let live = $state(null);
   let section;
   let visible = $state(false);
-  let entries = $derived(Object.values(deepMl?.items ?? {}));
-  let solved = $derived(entries.length);
-  let mathCount = $derived(entries.filter((item) => item.kind === 'math').length);
-  let problemCount = $derived(entries.filter((item) => item.kind === 'problem').length);
-  let categories = $derived(new Set(entries.map((item) => item.category).filter(Boolean)).size);
-  let since = $derived.by(() => {
-    const earliest = entries
-      .map((item) => item.first_solved_at)
-      .filter(Boolean)
-      .sort()[0];
-    return earliest
-      ? new Intl.DateTimeFormat('en', { month: 'short', year: 'numeric', timeZone: 'UTC' }).format(
-          new Date(earliest)
-        )
-      : '—';
-  });
-  let recent = $derived(
-    [...entries]
-      .sort((a, b) => b.first_solved_at.localeCompare(a.first_solved_at))
-      .slice(0, 5)
+  let entries = $derived(
+    Object.values((live ?? deepMl)?.items ?? {}).sort((a, b) =>
+      (b.last_pushed_at ?? b.first_solved_at).localeCompare(a.last_pushed_at ?? a.first_solved_at)
+    )
   );
+  let latest = $derived(entries[0]);
+  let recent = $derived(entries.slice(1, 4));
 
-  const stats = $derived([
-    { value: solved, label: 'problems solved' },
-    { value: mathCount, label: 'math derivations' },
-    { value: categories, label: 'topics' },
-    { value: since, label: 'daily since' }
-  ]);
+  const solutionUrl = (item) => `https://github.com/talal95c/deep-ml/tree/main/${item.path}`;
 
   const formatDate = (value) =>
     new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(
@@ -56,6 +40,13 @@
     );
 
   onMount(() => {
+    fetch(progressUrl, { cache: 'no-store' })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (data?.items && Object.keys(data.items).length) live = data;
+      })
+      .catch(() => {});
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -72,19 +63,31 @@
 
 <section id="research" bind:this={section} class:visible aria-labelledby="research-title">
   <h2 id="research-title">Deep-ML / Research</h2>
-  <p class="intro">
-    I study machine learning from the mathematics up. Every day I solve a problem on Deep-ML by hand: the derivation
-    first, then a NumPy implementation, committed to GitHub.
-  </p>
+  <div class="intro">
+    <p>
+      <a href="https://www.deep-ml.com" target="_blank" rel="noopener noreferrer">Deep-ML</a> is a platform of machine-learning
+      problems built on pure logic: no framework to lean on, every model has to be rebuilt from its equations. I use it as a
+      personal research practice. <mark class="daily">Every day</mark>, I take one problem, derive it on paper, implement it in
+      NumPy and publish the solution.
+    </p>
+    <p>
+      Nobody asks me to. I do it because understanding why a method works, down to the last gradient, is the part of this
+      field I enjoy most, and it is what lets me design new methods rather than only apply existing ones.
+    </p>
+  </div>
 
-  <ul class="stats" aria-label="Deep-ML progress">
-    {#each stats as stat (stat.label)}
-      <li>
-        <span class="value">{stat.value}</span>
-        <span class="label">{stat.label}</span>
-      </li>
-    {/each}
-  </ul>
+  {#if latest}
+    <a class="latest" href={solutionUrl(latest)} target="_blank" rel="noopener noreferrer">
+      <span class="latest-label"><span class="pulse" aria-hidden="true"></span>Last subject I worked on</span>
+      <span class="latest-title">{latest.title}</span>
+      <span class="latest-meta">
+        {latest.kind === 'math' ? 'Derivation' : 'Implementation'} · {latest.category} · {formatDate(
+          latest.last_pushed_at ?? latest.first_solved_at
+        )}
+      </span>
+      <span class="latest-link">View solution ↗</span>
+    </a>
+  {/if}
 
   <div class="derivations">
     <article class="derivation">
@@ -129,16 +132,16 @@
 
   <div class="research-detail">
     <div class="recent">
-      <h3>Recently solved</h3>
+      <h3>Before that</h3>
       <ul>
         {#each recent as item (`${item.kind}-${item.id}`)}
           <li>
             <a
-              href={`https://github.com/talal95c/deep-ml/tree/main/${item.path}`}
+              href={solutionUrl(item)}
               target="_blank"
               rel="noopener noreferrer"
             >{item.title}</a>
-            <span class="item-meta">{item.category} · {item.difficulty} · {formatDate(item.first_solved_at)}</span>
+            <span class="item-meta">{item.category} · {item.difficulty} · {formatDate(item.last_pushed_at ?? item.first_solved_at)}</span>
           </li>
         {/each}
       </ul>
@@ -204,32 +207,93 @@
     text-wrap: pretty;
   }
 
-  .stats {
+  .intro p + p {
+    margin-top: 12px;
+  }
+
+  .intro a {
+    color: #080808;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .daily {
+    padding: 0 3px;
+    margin: 0 -3px;
+    border-radius: 3px;
+    color: #080808;
+    background: linear-gradient(#cfeedd, #cfeedd) no-repeat left / 0 100%;
+    transition: background-size 0.9s var(--ease-out) 0.35s;
+  }
+
+  section.visible .daily {
+    background-size: 100% 100%;
+  }
+
+  .latest {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
-    margin: 30px 0 52px;
-    padding: 0;
-    list-style: none;
-  }
-
-  .stats li {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 16px 18px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px 24px;
+    margin: 32px 0 44px;
+    padding: 20px 22px;
+    border: 1px solid #00000012;
     border-radius: 12px;
-    background: #f7f6f9;
+    background: #fff;
+    transition: transform 0.2s var(--ease-out), border-color 0.2s;
   }
 
-  .value {
+  .latest-label {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #77747f;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .pulse {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #5cc489;
+    box-shadow: 0 0 0 0 #5cc48966;
+    animation: pulse 2.4s ease-out infinite;
+  }
+
+  @keyframes pulse {
+    70% {
+      box-shadow: 0 0 0 6px #5cc48900;
+    }
+    100% {
+      box-shadow: 0 0 0 0 #5cc48900;
+    }
+  }
+
+  .latest-title {
     color: #080808;
     font-size: 24px;
-    line-height: 1;
-    letter-spacing: -0.02em;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
   }
 
-  .label,
+  .latest-meta {
+    grid-column: 1;
+    color: #77747f;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .latest-link {
+    grid-column: 2;
+    grid-row: 2 / 4;
+    align-self: center;
+    color: #080808;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
   .item-meta,
   .project-description {
     color: #77747f;
@@ -268,6 +332,12 @@
 
   .equation :global(.katex-display) {
     margin: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .equation :global(.katex) {
+    font-size: 1.08em;
   }
 
   .derivation p {
@@ -367,6 +437,11 @@
       opacity: 0.65;
     }
 
+    .latest:hover {
+      transform: translateY(-2px);
+      border-color: #00000024;
+    }
+
     .project-card:hover {
       transform: translateY(-2px);
       background: #f2f1f4;
@@ -401,13 +476,20 @@
       font-size: 16px;
     }
 
-    .stats {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      margin: 24px 0 40px;
+    .latest {
+      grid-template-columns: minmax(0, 1fr);
+      margin: 24px 0 36px;
+      padding: 16px 18px;
     }
 
-    .stats li {
-      padding: 14px 16px;
+    .latest-title {
+      font-size: 21px;
+    }
+
+    .latest-link {
+      grid-column: 1;
+      grid-row: auto;
+      margin-top: 6px;
     }
 
     .derivation {
@@ -431,8 +513,14 @@
       transition: none;
     }
 
-    .project-card {
+    .project-card,
+    .latest,
+    .daily {
       transition: none;
+    }
+
+    .pulse {
+      animation: none;
     }
   }
 </style>
