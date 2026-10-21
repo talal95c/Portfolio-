@@ -2,7 +2,6 @@
   import { onMount, tick } from 'svelte';
   import Footer from '$lib/components/Footer.svelte';
   import Metatags from '$lib/components/Metatags.svelte';
-  import ProjectCard from '$lib/components/ProjectCard.svelte';
   import { projects } from '$lib/data/projects.js';
   import { plainText, richSegments } from '$lib/rich.js';
   import { workMedia } from '$lib/workMedia.js';
@@ -26,14 +25,6 @@
       ? []
       : projectMedia.slice(1).map((image, index) => ({ ...image, index }))
   );
-  let moreProjects = $derived.by(() => {
-    const index = Math.max(
-      0,
-      projects.findIndex((item) => item.slug === project.slug)
-    );
-    return [1, 2].map((offset) => projects[(index + offset) % projects.length]);
-  });
-
   let pageRoot;
   let navIsland;
   let nav;
@@ -351,17 +342,6 @@
         </div>
       </div>
 
-      <section class="more-projects" aria-labelledby="more-title">
-        <div class="more-header reveal">
-          <h2 id="more-title">More projects.</h2>
-          <a href="/#work" class="all-works">All works</a>
-        </div>
-        <div class="more-grid">
-          {#each moreProjects as moreProject (moreProject.slug)}
-            <ProjectCard project={moreProject} />
-          {/each}
-        </div>
-      </section>
     </div>
 
     {#if lightboxIndex >= 0 && gallery[lightboxIndex]}
@@ -784,39 +764,10 @@
     line-height: 1.4;
   }
 
-  .more-projects {
-    margin-top: 160px;
-  }
 
-  .more-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-  }
 
-  .more-header h2 {
-    font-size: clamp(36px, 4vw, 60px);
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    line-height: 1;
-  }
 
-  .all-works {
-    flex: none;
-    font-size: 14px;
-    line-height: 1.3;
-    text-decoration: none;
-    text-underline-offset: 4px;
-    transition: opacity 0.2s;
-  }
 
-  .more-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-    margin-top: 40px;
-  }
 
   :global(#project-page.ready) .reveal {
     opacity: 0;
@@ -863,9 +814,6 @@
       transform: none;
     }
 
-    .all-works:hover {
-      text-decoration: underline;
-    }
   }
 
   .lightbox {
@@ -982,9 +930,6 @@
       width: 84%;
     }
 
-    .more-grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
 
     .lightbox-close {
       top: 10px;
