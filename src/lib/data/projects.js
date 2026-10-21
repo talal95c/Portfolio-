@@ -40,6 +40,43 @@ export const projects = [
     },
   },
   {
+    name: `Turbofan RUL`,
+    slug: `turbofan-rul`,
+    featured: true,
+    website: `https://github.com/talal95c/NASA-C-MAPSS--turbofan-engine-degradation-`,
+    description: `How many cycles does a __turbofan engine__ have left? A study on NASA C-MAPSS with a deep ensemble whose 90 % intervals cover **88–93 % of test engines**.`,
+    date: `Oct 2026`,
+    tags: [`Deep learning`, `Uncertainty`, `Research`],
+    images: [
+      `/work/turbofan-rul/turbofan_cover.webp`,
+      `/work/turbofan-rul/turbofan_test.webp`,
+    ],
+    caseStudy: {
+      color: `#dfe6fb`,
+      selection: `#eff3fd`,
+      role: `Independent study`,
+      team: `Solo project`,
+      skills: `PyTorch, scikit-learn, time series, uncertainty estimation`,
+      context: `C-MAPSS is NASA’s benchmark of simulated turbofan engines run to failure: 21 sensors and 3 operating settings per cycle, in four subsets with one to six flight conditions and one or two fault modes. Predicting the remaining useful life (RUL) of an engine from its last 30 cycles is the reference problem of prognostics in aircraft maintenance, close to my field at Safran Aircraft Engines. I ran the study end to end: protocol, baselines, a deep model with uncertainty, and an honest comparison.`,
+      goal: `Predict how many cycles an engine has left, and know when not to trust the prediction.`,
+      results: [
+        { value: `88–93 %`, label: `Coverage of the deep ensemble’s 90 % intervals on the four test sets` },
+        { value: `12.4–14.1`, label: `Test RMSE in cycles of the best model, gradient boosting, across the four subsets` },
+        { value: `14.6`, label: `CNN RMSE on FD002 (six conditions), vs. 22.4 reported for the same backbone (Li et al., 2018)` },
+      ],
+      alt: `Predicted remaining useful life of a held-out engine, with its 90 % interval, against the true value.`,
+      media: [
+        `/work/turbofan-rul/turbofan_cover.webp`,
+        `/work/turbofan-rul/turbofan_test.webp`,
+      ],
+      contextImage: `/work/turbofan-rul/turbofan_test.webp`,
+      heroImages: [
+        `/work/turbofan-rul/turbofan_cover.webp`,
+        `/work/turbofan-rul/turbofan_test.webp`,
+      ],
+    },
+  },
+  {
     name: `Adib`,
     slug: `adib`,
     featured: true,

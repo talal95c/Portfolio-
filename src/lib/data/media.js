@@ -197,6 +197,22 @@ export const media = {
     tone: "light",
     card: {"src": "/work/sylo/sylo_screenshot_2_card.webp", "width": 625, "height": 468},
   },
+  "/work/turbofan-rul/turbofan_cover.webp": {
+    src: "/work/turbofan-rul/turbofan_cover_trim.webp",
+    hash: "d6a2aea9aef1",
+    width: 1565,
+    height: 1173,
+    tone: "light",
+    card: {"src": "/work/turbofan-rul/turbofan_cover_card.webp", "width": 1494, "height": 1102},
+  },
+  "/work/turbofan-rul/turbofan_test.webp": {
+    src: "/work/turbofan-rul/turbofan_test_trim.webp",
+    hash: "122f949509a3",
+    width: 1537,
+    height: 896,
+    tone: "light",
+    card: {"src": "/work/turbofan-rul/turbofan_test_card.webp", "width": 1482, "height": 841},
+  },
   "/work/wildwater/wildwater_cover.webp": {
     src: "/work/wildwater/wildwater_cover_trim.webp",
     hash: "1397e1647993",

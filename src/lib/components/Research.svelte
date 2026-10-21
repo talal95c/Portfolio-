@@ -147,7 +147,7 @@
     <div class="projects">
       <h3>Research projects</h3>
       <div class="project-grid">
-        <a class="project-card" href="/work/turbofan-rul" rel="external">
+        <a class="project-card" href="/work/turbofan-rul">
           <span class="project-title">Turbofan RUL</span>
           <span class="project-description">Uncertainty-aware remaining useful life on NASA C-MAPSS</span>
         </a>
