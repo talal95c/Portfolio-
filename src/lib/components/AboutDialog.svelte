@@ -124,6 +124,11 @@
 <style>
   .headshot {
     flex-shrink: 0 !important;
+    border-radius: 14px !important;
+  }
+
+  .headshot img {
+    border-radius: 14px !important;
   }
 
   .panel {
