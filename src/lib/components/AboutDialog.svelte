@@ -12,7 +12,7 @@
     {
       title: 'Education',
       items: [
-        { years: '2026 – 2029', company: 'CY Tech, Paris', role: 'Engineering cycle', emoji: 'laptop', note: 'Master of Engineering in Computer Science, top 5% of the cohort. Apprenticeship with Safran.' },
+        { years: '2026 – 2029', company: 'CY Tech, Paris', role: 'Engineering cycle', emoji: 'laptop', note: 'Master of Engineering in Computer Science, machine learning specialisation, top 5% of the cohort. Apprenticeship with Safran.' },
         { years: '2024 – 2026', company: 'CY Tech, Paris', role: 'Integrated prépa', emoji: 'ruler', note: 'Two-year preparatory cycle in maths, physics and computer science.' }
       ]
     },
