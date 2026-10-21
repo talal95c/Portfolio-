@@ -76,17 +76,9 @@
 </script>
 
 <div class="dock" class:open={step === 1} class:viewing bind:this={dock}>
-  <p class="hint" aria-hidden="true">
-    <span class="hint-text">click here for the CV!</span>
-    <svg class="hint-arrow" viewBox="0 0 70 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <path class="draw" pathLength="1" d="M8 10c22-2 42 10 50 34" />
-      <path class="draw head" pathLength="1" d="M49 38l9 8 4-12" />
-    </svg>
-  </p>
-
   <button type="button" class="pocket" aria-expanded={step === 1} aria-label={step === 1 ? 'Put the CV back' : 'Take out my CV'} onclick={togglePocket}>
     <span class="back"></span>
-    <span class="front"><span class="sheen"></span></span>
+    <span class="front"><span class="sheen"></span><span class="label">CV</span></span>
   </button>
 
   <span class="sheet ghost g1" aria-hidden="true"></span>
@@ -337,53 +329,19 @@
     outline: 2px solid #7950ef;
   }
 
-  /* Handwritten hint, same voice as the « click there! » note. */
-  .hint {
-    pointer-events: none;
-    color: #2142b8;
-    white-space: nowrap;
-    font-family: 'Gochi Hand', 'Comic Sans MS', cursive;
+  /* Engraved « CV » on the pouch. */
+  .label {
+    color: #ffffff30;
+    letter-spacing: 0.18em;
+    text-shadow:
+      0 -1px 0 #000000a6,
+      0 1px 0 #ffffff1a;
     font-size: 19px;
     line-height: 1;
-    z-index: 3;
     position: absolute;
-    bottom: 74px;
-    right: calc(100% + 26px);
-    transition:
-      opacity 0.3s,
-      transform 0.45s var(--spring);
-  }
-
-  .hint-text {
-    display: inline-block;
-    transform: rotate(-5deg);
-    animation: hint-in 0.45s 0.6s var(--glide) both;
-  }
-
-  .hint-arrow {
-    width: 46px;
-    height: 40px;
-    position: absolute;
-    top: 14px;
-    right: -30px;
-    overflow: visible;
-  }
-
-  .draw {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    animation: hint-draw 0.55s 1s var(--glide) forwards;
-  }
-
-  .draw.head {
-    animation-delay: 1.45s;
-    animation-duration: 0.25s;
-  }
-
-  .open .hint,
-  .viewing .hint {
-    opacity: 0;
-    transform: translateX(-8px);
+    top: 50%;
+    left: 50%;
+    transform: translate(calc(-50% + 0.09em), -50%);
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -409,10 +367,6 @@
 
     .pocket:hover .sheen {
       transform: translateX(110%);
-    }
-
-    .dock:not(.open):has(.pocket:hover) .hint {
-      transform: rotate(3deg) scale(1.06);
     }
 
     .open .cv:hover {
@@ -544,29 +498,12 @@
     outline: 2px solid #7950ef;
   }
 
-  @keyframes hint-draw {
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-
-  @keyframes hint-in {
-    from {
-      opacity: 0;
-      transform: rotate(-5deg) scale(0.6);
-    }
-  }
-
   @media (width <= 700px) {
     .dock {
       right: 14px;
       bottom: 14px;
       transform: scale(0.8);
       transform-origin: 100% 100%;
-    }
-
-    .hint {
-      font-size: 17px;
     }
 
     .stage {
@@ -583,16 +520,9 @@
     .sheet,
     .front,
     .sheen,
-    .hint,
     .bar,
     .viewer::backdrop {
       transition: none;
-    }
-
-    .draw,
-    .hint-text {
-      animation: none;
-      stroke-dashoffset: 0;
     }
   }
 </style>
