@@ -78,7 +78,12 @@
       </button>
     </header>
 
-    <div class="block" style="--i: 0">
+    <div class="headshot svelte-7hpc9t block" style="--i: 0">
+      <img src="/assets/talal-hackathon.webp" alt="Talal, in white, at a hackathon, working on a laptop with a teammate." width="1200" height="800" loading="eager" decoding="async" class="svelte-7hpc9t" />
+      <img class="subject svelte-7hpc9t" src="/assets/talal-hackathon-subject.webp" alt="" width="1200" height="800" loading="eager" decoding="async" />
+    </div>
+
+    <div class="block" style="--i: 1">
       <p class="lead">Computer science engineering student at <strong>CY Tech, Paris</strong>, and AI engineer apprentice at <strong>Safran Aircraft Engines</strong>.</p>
       <div class="bio">
         <p>After two years of integrated prépa at CY Tech, I joined the computer science engineering cycle, where I rank in the top 5%.</p>
@@ -86,7 +91,7 @@
       </div>
     </div>
 
-    <ul class="stats block" style="--i: 1">
+    <ul class="stats block" style="--i: 2">
       {#each stats as stat (stat.label)}
         <li style={`--tint:${stat.tint}`}><span class="value">{stat.value}</span><span class="label">{stat.label}</span></li>
       {/each}
@@ -94,7 +99,7 @@
 
 
     {#each timeline as group, groupIndex (group.title)}
-      <section class="block" style={`--i: ${groupIndex + 2}`} aria-labelledby={`about-${group.title.toLowerCase()}`}>
+      <section class="block" style={`--i: ${groupIndex + 3}`} aria-labelledby={`about-${group.title.toLowerCase()}`}>
         <h3 id={`about-${group.title.toLowerCase()}`}>{group.title}</h3>
         <ol>
           {#each group.items as item (item.company + item.role)}
@@ -113,14 +118,14 @@
       </section>
     {/each}
 
-    <div class="headshot svelte-7hpc9t block" style={`--i: ${timeline.length + 2}`}>
-      <img src="/assets/talal-hackathon.webp" alt="Talal, in white, at a hackathon, working on a laptop with a teammate." width="1200" height="800" loading="lazy" decoding="async" class="svelte-7hpc9t" />
-      <img class="subject svelte-7hpc9t" src="/assets/talal-hackathon-subject.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" />
-    </div>
   </div>
 </dialog>
 
 <style>
+  .headshot {
+    flex-shrink: 0 !important;
+  }
+
   .panel {
     justify-content: flex-start !important;
     gap: 44px !important;
