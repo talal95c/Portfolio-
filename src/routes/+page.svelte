@@ -8,6 +8,7 @@
   import WorkList from '$lib/components/WorkList.svelte';
   import Bonus from '$lib/components/Bonus.svelte';
   import GitHubActivity from '$lib/components/GitHubActivity.svelte';
+  import Research from '$lib/components/Research.svelte';
   import AboutDialog from '$lib/components/AboutDialog.svelte';
   import CvPocket from '$lib/components/CvPocket.svelte';
   import '$lib/styles/home.css';
@@ -51,7 +52,7 @@
   });
 </script>
 
-<Metatags description="I build and learn. AI Engineer at Safran Aircraft Engines and Computer Science student at CY Tech." />
+<Metatags description="I build and learn. AI research engineer at Safran Aircraft Engines, machine learning and mathematics, Computer Science at CY Tech." />
 <a class="skip svelte-1uha8ag" href="#work">Skip to work</a>
 <main>
   <section class="hero svelte-1uha8ag" aria-label="Introduction">
@@ -72,7 +73,7 @@
       </button>
     </p>
     <p class="education svelte-1uha8ag">
-      <span class="org"><img class="org-logo safran" src="/assets/logos/safran.svg" alt="" width="1000" height="210" />AI Engineer @ Safran Aircraft Engines</span><br />
+      <span class="org"><img class="org-logo safran" src="/assets/logos/safran.svg" alt="" width="1000" height="210" />AI Research @ Safran<span class="org-long"> Aircraft Engines</span></span><br />
       <span class="org"><img class="org-logo cy" src="/assets/logos/cy-tech.png" alt="" width="96" height="94" />Computer Science @ CY Tech, Paris</span>
     </p>
     <h1 class="svelte-1uha8ag"><span class="svelte-1uha8ag">Talal</span> <span class="svelte-1uha8ag">Aamir</span></h1>
@@ -85,6 +86,7 @@
     {/if}
   </section>
   <WorkList />
+  <Research deepMl={data.deepMl} />
   <Bonus />
   <GitHubActivity activity={data.githubActivity} />
 </main>
@@ -236,6 +238,10 @@
   }
 
   @media (width <= 700px) {
+    .org-long {
+      display: none;
+    }
+
     .cv-note {
       transform: scale(0.55);
       top: 10px;

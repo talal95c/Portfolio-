@@ -2,15 +2,17 @@
   import { onMount, tick } from 'svelte';
   import Footer from '$lib/components/Footer.svelte';
   import Metatags from '$lib/components/Metatags.svelte';
-  import ProjectCard from '$lib/components/ProjectCard.svelte';
   import { projects } from '$lib/data/projects.js';
   import { plainText, richSegments } from '$lib/rich.js';
   import { workMedia } from '$lib/workMedia.js';
+  import { technical } from '$lib/data/technical.js';
+  import ArchitectureDiagram from '$lib/components/ArchitectureDiagram.svelte';
   import '$lib/components/work.css';
 
   let { data } = $props();
   let project = $derived(data.project);
   let caseStudy = $derived(project.caseStudy);
+  let technicalContent = $derived(technical[project.slug]);
   let projectIndex = $derived(projects.findIndex((item) => item.slug === project.slug));
   let projectNumber = $derived(String(projectIndex + 1).padStart(2, '0'));
   let projectCount = $derived(String(projects.length).padStart(2, '0'));
@@ -19,18 +21,10 @@
   let projectMedia = $derived(workMedia(project));
   let heroImage = $derived(projectMedia[0]);
   let gallery = $derived(
-    caseStudy.gallery === false
+    technicalContent || caseStudy.gallery === false
       ? []
       : projectMedia.slice(1).map((image, index) => ({ ...image, index }))
   );
-  let moreProjects = $derived.by(() => {
-    const index = Math.max(
-      0,
-      projects.findIndex((item) => item.slug === project.slug)
-    );
-    return [1, 2].map((offset) => projects[(index + offset) % projects.length]);
-  });
-
   let pageRoot;
   let navIsland;
   let nav;
@@ -285,6 +279,30 @@
             </section>
           </div>
 
+          {#if technicalContent}
+            <section class="technical-section" aria-labelledby="technical-title">
+              <div>
+                <p id="technical-title" class="section-label">{technicalContent.title}</p>
+                <div class="technical-copy">
+                  {#each technicalContent.paragraphs as paragraph}
+                    <p>
+                      {#each richSegments(paragraph) as segment}
+                        {#if segment.bold}
+                          <strong>{segment.text}</strong>
+                        {:else if segment.underline}
+                          <span class="u">{segment.text}</span>
+                        {:else}
+                          {segment.text}
+                        {/if}
+                      {/each}
+                    </p>
+                  {/each}
+                </div>
+              </div>
+              <ArchitectureDiagram stages={technicalContent.stages} accent={caseStudy.color} />
+            </section>
+          {/if}
+
           {#if gallery.length}
             <section class="gallery" aria-label="Project gallery">
               {#each gallery as image (image.original)}
@@ -324,17 +342,6 @@
         </div>
       </div>
 
-      <section class="more-projects" aria-labelledby="more-title">
-        <div class="more-header reveal">
-          <h2 id="more-title">More projects.</h2>
-          <a href="/#work" class="all-works">All works</a>
-        </div>
-        <div class="more-grid">
-          {#each moreProjects as moreProject (moreProject.slug)}
-            <ProjectCard project={moreProject} />
-          {/each}
-        </div>
-      </section>
     </div>
 
     {#if lightboxIndex >= 0 && gallery[lightboxIndex]}
@@ -665,6 +672,35 @@
     line-height: 1.5;
   }
 
+  .technical-section {
+    display: grid;
+    gap: 16px;
+    padding-bottom: 56px;
+  }
+
+  .technical-copy {
+    display: grid;
+    gap: 16px;
+    max-width: 550px;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 17.6px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .technical-copy strong {
+    color: #111;
+    font-weight: 500;
+    -webkit-text-stroke: 0.4px currentColor;
+  }
+
+  .technical-copy .u {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: rgb(0 0 0 / 0.3);
+  }
+
   .gallery {
     display: flex;
     flex-direction: column;
@@ -728,39 +764,10 @@
     line-height: 1.4;
   }
 
-  .more-projects {
-    margin-top: 160px;
-  }
 
-  .more-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-  }
 
-  .more-header h2 {
-    font-size: clamp(36px, 4vw, 60px);
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    line-height: 1;
-  }
 
-  .all-works {
-    flex: none;
-    font-size: 14px;
-    line-height: 1.3;
-    text-decoration: none;
-    text-underline-offset: 4px;
-    transition: opacity 0.2s;
-  }
 
-  .more-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-    margin-top: 40px;
-  }
 
   :global(#project-page.ready) .reveal {
     opacity: 0;
@@ -807,9 +814,6 @@
       transform: none;
     }
 
-    .all-works:hover {
-      text-decoration: underline;
-    }
   }
 
   .lightbox {
@@ -926,9 +930,6 @@
       width: 84%;
     }
 
-    .more-grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
 
     .lightbox-close {
       top: 10px;

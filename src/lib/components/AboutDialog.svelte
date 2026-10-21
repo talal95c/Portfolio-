@@ -19,7 +19,7 @@
     {
       title: 'Experience',
       items: [
-        { years: '2026 – 2029', company: 'Safran Aircraft Engines', role: 'AI Engineer, Applied Research', emoji: 'plane', note: 'Apprenticeship. Agentic AI that automates sales administration, connecting generative AI to existing business tools and data. Working with business teams in Montereau-sur-le-Jard to identify and prioritise use cases.' }
+        { years: '2026 – 2029', company: 'Safran Aircraft Engines', role: 'AI Research Engineer', emoji: 'plane', note: 'Apprenticeship. I research AI solutions for business teams in Montereau-sur-le-Jard: framing each problem, comparing approaches on real data and shipping the ones that hold up. First case: agentic AI that automates sales administration, connected to the tools and data teams already use.' }
       ]
     },
     {
@@ -82,7 +82,7 @@
       <p class="lead">Computer science engineering student at <strong>CY Tech, Paris</strong>, and AI engineer apprentice at <strong>Safran Aircraft Engines</strong>.</p>
       <div class="bio">
         <p>After two years of integrated prépa at CY Tech, I joined the computer science engineering cycle, where I rank in the top 5%.</p>
-        <p>In parallel, at Safran, I design and ship agentic AI that automates sales administration, from the model to the tools teams already use. In hackathons, <strong>Legible</strong>, my legal AI harness, won the Mistral × Stanford Law School hackathon and its Legora track.</p>
+        <p>At Safran Aircraft Engines, I research AI solutions to real operational problems: I frame the question, compare approaches on real data and ship what holds up. Outside work, I solve a machine-learning problem every day from the mathematics up and run my own experiments, such as uncertainty-aware remaining-useful-life prediction for turbofan engines. Hackathons come second, as a place to test ideas against a deadline; <strong>Legible</strong> won the Mistral × Stanford Law School hackathon.</p>
       </div>
     </div>
 
