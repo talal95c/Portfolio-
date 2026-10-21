@@ -151,6 +151,43 @@ export const projects = [
     },
   },
   {
+    name: `NASA Turbofan RUL`,
+    slug: `nasa-rul`,
+    description: `__Remaining useful life prediction__ for turbofan engines on NASA C-MAPSS: **predictive-maintenance ML research**, from leakage-free evaluation to SHAP.`,
+    date: `Oct 2026`,
+    tags: [`ML research`, `Predictive maintenance`],
+    images: [
+      `/work/nasa-rul/nasa-rul_cover.webp`,
+      `/work/nasa-rul/nasa-rul_screenshot_1.webp`,
+      `/work/nasa-rul/nasa-rul_screenshot_2.webp`,
+    ],
+    caseStudy: {
+      color: `#e4ecf2`,
+      selection: `#f1f5f9`,
+      role: `ML Researcher`,
+      team: `Solo research project`,
+      skills: `Python, pandas, scikit-learn, LightGBM, SHAP`,
+      context: `This project predicts the remaining useful life (RUL) of turbofan engines from their sensor history, using NASA's C-MAPSS FD001 dataset: 100 engines run to failure, 21 sensors, one operating regime and one failure mode. The target is a piecewise-linear RUL capped at 125 cycles, because a healthy engine carries little signal about how long it has left. The evaluation protocol comes first: engines are split with grouped cross-validation so no engine leaks across folds, and the rolling-window features (means and slopes) are strictly causal. Models go from a linear baseline written from scratch with gradient descent to Ridge, Random Forest and LightGBM, scored with RMSE, MAE and the asymmetric NASA PHM08 score, which penalises late predictions more than early ones. SHAP and an error analysis by distance to failure link the dominant sensors back to the degradation seen during exploration.`,
+      goal: `Predict how many cycles an engine has left before failure, so that maintenance can be planned before it breaks rather than after.`,
+      results: [
+        { value: `100`, label: `Run-to-failure engines (FD001)` },
+        { value: `21`, label: `Sensors explored and filtered` },
+        { value: `125`, label: `Cycle cap on the RUL target` },
+      ],
+      alt: `Sensor degradation trajectories of NASA C-MAPSS turbofan engines.`,
+      media: [
+        `/work/nasa-rul/nasa-rul_cover.webp`,
+        `/work/nasa-rul/nasa-rul_screenshot_1.webp`,
+        `/work/nasa-rul/nasa-rul_screenshot_2.webp`,
+      ],
+      contextImage: `/work/nasa-rul/nasa-rul_screenshot_1.webp`,
+      heroImages: [
+        `/work/nasa-rul/nasa-rul_cover.webp`,
+        `/work/nasa-rul/nasa-rul_screenshot_2.webp`,
+      ],
+    },
+  },
+  {
     name: `MiroPolis`,
     slug: `miropolis`,
     description: `A __multi-agent digital twin__ of the French National Assembly that simulates how a bill is debated and voted; **top project** at the French National Assembly hackathon.`,
