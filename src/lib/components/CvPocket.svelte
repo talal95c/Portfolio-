@@ -32,7 +32,8 @@
     const to = sheet.getBoundingClientRect();
     const dx = from.left + from.width / 2 - (to.left + to.width / 2);
     const dy = from.top + from.height / 2 - (to.top + to.height / 2);
-    return `translate(${dx}px, ${dy}px) scale(${card.offsetWidth / sheet.offsetWidth}) rotate(3deg)`;
+    const s = parseFloat(getComputedStyle(card).getPropertyValue('--s')) || 0.44;
+    return `translate(${dx}px, ${dy}px) scale(${(card.offsetWidth * s) / sheet.offsetWidth}) rotate(3deg)`;
   }
 
   async function view() {
@@ -156,7 +157,7 @@
     <span class="back"></span>
     <span class="front">
       <span class="sheen"></span>
-      <span class="front-hint" aria-hidden="true">click here for the CV</span>
+      <span class="label" aria-hidden="true">CV</span>
     </span>
   </button>
 
@@ -275,25 +276,19 @@
       0 4px 10px -4px #0005;
   }
 
-  .front-hint {
-    color: #c9c9cf;
-    white-space: nowrap;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.035em;
+  /* Engraved « CV » on the pouch. */
+  .label {
+    color: #ffffff30;
+    letter-spacing: 0.18em;
+    text-shadow:
+      0 -1px 0 #000000a6,
+      0 1px 0 #ffffff1a;
+    font-size: 19px;
     line-height: 1;
-    text-align: center;
     position: absolute;
-    right: 0;
-    bottom: 14px;
-    left: 0;
-    transition: opacity 0.25s;
-  }
-
-  .open .front-hint,
-  .viewing .front-hint {
-    opacity: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(calc(-50% + 0.09em), -50%);
   }
 
   .dock img,
@@ -649,7 +644,6 @@
     .sheet,
     .front,
     .sheen,
-    .front-hint,
     .bar,
     .paper,
     .viewer::backdrop {
