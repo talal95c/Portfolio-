@@ -1,6 +1,8 @@
 import snapshot from '$lib/data/github-contributions.json';
+import deepMlSnapshot from '$lib/data/deep-ml-progress.json';
 
 const contributionsUrl = 'https://github.com/users/talal95c/contributions';
+const deepMlUrl = 'https://raw.githubusercontent.com/talal95c/deep-ml/main/progress.json';
 
 function parseContributions(content) {
   const totalMatch = content.match(/([\d,]+)\s+contributions\s+in the last year/i);
@@ -43,17 +45,41 @@ function parseContributions(content) {
   };
 }
 
-export async function load() {
+async function loadContributions() {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 5000);
 
   try {
     const response = await fetch(contributionsUrl, { signal: controller.signal });
     if (!response.ok) throw new Error(`GitHub returned ${response.status}`);
-    return { githubActivity: parseContributions(await response.text()) };
+    return parseContributions(await response.text());
   } catch {
-    return { githubActivity: snapshot };
+    return snapshot;
   } finally {
     clearTimeout(timeout);
   }
+}
+
+async function loadDeepMl() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+
+  try {
+    const response = await fetch(deepMlUrl, { signal: controller.signal });
+    if (!response.ok) throw new Error(`Deep-ML returned ${response.status}`);
+    const progress = await response.json();
+    if (!progress?.items || typeof progress.items !== 'object') {
+      throw new Error('Deep-ML progress items were not found');
+    }
+    return progress;
+  } catch {
+    return deepMlSnapshot;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+export async function load() {
+  const [githubActivity, deepMl] = await Promise.all([loadContributions(), loadDeepMl()]);
+  return { githubActivity, deepMl };
 }

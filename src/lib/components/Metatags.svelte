@@ -1,7 +1,7 @@
 <script>
   let {
     title = 'Talal Aamir',
-    description = 'I build and learn. AI Engineer at Safran Aircraft Engines and Computer Science student at CY Tech.',
+    description = 'I build and learn. AI research engineer at Safran Aircraft Engines, machine learning and mathematics, Computer Science at CY Tech.',
     image = '/card.png'
   } = $props();
 </script>

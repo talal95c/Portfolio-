@@ -6,11 +6,14 @@
   import { projects } from '$lib/data/projects.js';
   import { plainText, richSegments } from '$lib/rich.js';
   import { workMedia } from '$lib/workMedia.js';
+  import { technical } from '$lib/data/technical.js';
+  import ArchitectureDiagram from '$lib/components/ArchitectureDiagram.svelte';
   import '$lib/components/work.css';
 
   let { data } = $props();
   let project = $derived(data.project);
   let caseStudy = $derived(project.caseStudy);
+  let technicalContent = $derived(technical[project.slug]);
   let projectIndex = $derived(projects.findIndex((item) => item.slug === project.slug));
   let projectNumber = $derived(String(projectIndex + 1).padStart(2, '0'));
   let projectCount = $derived(String(projects.length).padStart(2, '0'));
@@ -19,7 +22,7 @@
   let projectMedia = $derived(workMedia(project));
   let heroImage = $derived(projectMedia[0]);
   let gallery = $derived(
-    caseStudy.gallery === false
+    technicalContent || caseStudy.gallery === false
       ? []
       : projectMedia.slice(1).map((image, index) => ({ ...image, index }))
   );
@@ -284,6 +287,30 @@
               <p id="goal-title" class="story-goal">{caseStudy.goal}</p>
             </section>
           </div>
+
+          {#if technicalContent}
+            <section class="technical-section" aria-labelledby="technical-title">
+              <div>
+                <p id="technical-title" class="section-label">{technicalContent.title}</p>
+                <div class="technical-copy">
+                  {#each technicalContent.paragraphs as paragraph}
+                    <p>
+                      {#each richSegments(paragraph) as segment}
+                        {#if segment.bold}
+                          <strong>{segment.text}</strong>
+                        {:else if segment.underline}
+                          <span class="u">{segment.text}</span>
+                        {:else}
+                          {segment.text}
+                        {/if}
+                      {/each}
+                    </p>
+                  {/each}
+                </div>
+              </div>
+              <ArchitectureDiagram stages={technicalContent.stages} accent={caseStudy.color} />
+            </section>
+          {/if}
 
           {#if gallery.length}
             <section class="gallery" aria-label="Project gallery">
@@ -663,6 +690,35 @@
     font-size: 17.6px;
     font-weight: 400;
     line-height: 1.5;
+  }
+
+  .technical-section {
+    display: grid;
+    gap: 16px;
+    padding-bottom: 56px;
+  }
+
+  .technical-copy {
+    display: grid;
+    gap: 16px;
+    max-width: 550px;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 17.6px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .technical-copy strong {
+    color: #111;
+    font-weight: 500;
+    -webkit-text-stroke: 0.4px currentColor;
+  }
+
+  .technical-copy .u {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: rgb(0 0 0 / 0.3);
   }
 
   .gallery {
