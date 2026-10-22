@@ -116,7 +116,7 @@ export const projects = [
     slug: `intellectuel-athlete`,
     featured: true,
     website: `https://www.tiktok.com/@intellectuelathlete`,
-    description: `A __TikTok channel__ on learning, discipline and the body, run as a long experiment in audience research: **14.8K followers** and **2.8M views** in its first year.`,
+    description: `A __TikTok channel__ on learning, discipline and the body, run as a long experiment in audience research: **14.8K followers** and **2.8M views** in the past year.`,
     date: `Ongoing`,
     tags: [`Creator`, `TikTok`, `Mind & body`],
     images: [
