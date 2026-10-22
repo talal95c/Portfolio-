@@ -52,7 +52,7 @@
   });
 </script>
 
-<Metatags description="I build and learn. AI research engineer at Safran Aircraft Engines, machine learning and mathematics, Computer Science at CY Tech." />
+<Metatags description="I build and learn. AI engineer apprentice at Safran Aircraft Engines, machine learning and mathematics, Computer Science at CY Tech." />
 <a class="skip svelte-1uha8ag" href="#work">Skip to work</a>
 <main>
   <section class="hero svelte-1uha8ag" aria-label="Introduction">
@@ -73,7 +73,7 @@
       </button>
     </p>
     <p class="education svelte-1uha8ag">
-      <span class="org"><img class="org-logo safran" src="/assets/logos/safran.svg" alt="" width="1000" height="210" />AI Research @ Safran<span class="org-long"> Aircraft Engines</span></span><br />
+      <span class="org"><img class="org-logo safran" src="/assets/logos/safran.svg" alt="" width="1000" height="210" />AI Engineer @ Safran<span class="org-long"> Aircraft Engines</span></span><br />
       <span class="org"><img class="org-logo cy" src="/assets/logos/cy-tech.png" alt="" width="96" height="94" />Computer Science @ CY Tech, Paris</span>
     </p>
     <h1 class="svelte-1uha8ag"><span class="svelte-1uha8ag">Talal</span> <span class="svelte-1uha8ag">Aamir</span></h1>
