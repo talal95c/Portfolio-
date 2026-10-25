@@ -7,11 +7,14 @@
     katex.renderToString(tex, { displayMode: true, throwOnError: false, output: 'html' });
 
   const equations = {
-    leastSquares: renderEquation(String.raw`\begin{gathered}
-      \nabla_\theta \lVert X\theta - y \rVert^2 = 2X^\top(X\theta - y) = 0 \\
-      \theta^\ast = (X^\top X)^{-1}X^\top y
+    gradientCheck: renderEquation(String.raw`\begin{gathered}
+      \hat g_i = \frac{f(\theta + \varepsilon e_i) - f(\theta - \varepsilon e_i)}{2\varepsilon} \\
+      r = \frac{\lVert \hat g - g \rVert_2}{\lVert \hat g \rVert_2 + \lVert g \rVert_2}
     \end{gathered}`),
-    minibatches: renderEquation(String.raw`\operatorname{Var}\big[\hat g_B\big] = \frac{\sigma^2}{B}`),
+    decompositions: renderEquation(String.raw`\begin{gathered}
+      PA = LU, \qquad A = QR,\; Q^\top Q = I \\
+      Rx = Q^\top b
+    \end{gathered}`),
     backpropagation: renderEquation(String.raw`\begin{aligned}
       \delta^{(2)} &= A^{(2)} - Y, \\
       \frac{\partial L}{\partial W^{(2)}} &= \frac{1}{m}\,\delta^{(2)} A^{(1)\top}
@@ -91,27 +94,27 @@
 
   <div class="derivations">
     <article class="derivation">
-      <h3>Least squares, in closed form</h3>
+      <h3>Checking gradients numerically</h3>
       <div
         class="equation"
         role="img"
-        aria-label="Gradient of squared error gives the least-squares solution"
+        aria-label="Central-difference gradient estimate and its relative error against the analytical gradient"
       >
-        {@html equations.leastSquares}
+        {@html equations.gradientCheck}
       </div>
-      <p>Setting the gradient to zero gives the normal equations. I solve the same regression with gradient descent and compare the two.</p>
+      <p>A central difference is accurate to O(ε²). I compare it with the analytical gradient through the relative error before trusting any backward pass.</p>
     </article>
 
     <article class="derivation">
-      <h3>Why minibatches work</h3>
+      <h3>Linear systems: LU and QR</h3>
       <div
         class="equation"
         role="img"
-        aria-label="Gradient variance is sigma squared divided by batch size"
+        aria-label="LU factorisation with pivoting, QR factorisation, and the triangular system it yields"
       >
-        {@html equations.minibatches}
+        {@html equations.decompositions}
       </div>
-      <p>Averaging B independent per-sample gradients divides the variance by B: the noise in SGD shrinks as 1/√B while the cost grows as B.</p>
+      <p>Gaussian elimination is LU in disguise: factor once, then solve with two triangular substitutions. QR avoids forming XᵀX, which squares the condition number in least squares.</p>
     </article>
 
     <article class="derivation">
