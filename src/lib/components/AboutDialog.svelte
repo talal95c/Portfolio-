@@ -4,7 +4,7 @@
   const stats = [
     { value: 'Top 5%', label: 'engineering cycle, CY Tech', tint: '#eeebfa' },
     { value: '3 years', label: 'AI apprenticeship at Safran', tint: '#e8f1fb' },
-    { value: '4', label: 'hackathon podiums', tint: '#fdeee6' },
+    { value: '4', label: 'hackathon awards', tint: '#fdeee6' },
     { value: '14.8K', label: 'followers on TikTok', tint: '#e9f6ee' }
   ];
 
@@ -19,7 +19,7 @@
     {
       title: 'Experience',
       items: [
-        { years: '2026 – 2029', company: 'Safran Aircraft Engines', role: 'AI Research Engineer', emoji: 'plane', note: 'Apprenticeship. I research AI solutions for business teams in Montereau-sur-le-Jard: framing each problem, comparing approaches on real data and shipping the ones that hold up. First case: agentic AI that automates sales administration, connected to the tools and data teams already use.' }
+        { years: '2026 – 2029', company: 'Safran Aircraft Engines', role: 'AI Engineer (apprentice)', emoji: 'plane', note: 'Apprenticeship in Montereau-sur-le-Jard. I design, evaluate and deploy LLM agents that automate sales administration, grounded in the tools and data business teams already use, working with those teams to scope each use case.' }
       ]
     },
     {
@@ -90,7 +90,7 @@
     <div class="block" style="--i: 2">
       <div class="bio">
         <p>After two years of integrated prépa at CY Tech, I joined the computer science engineering cycle, where I rank in the top 5%.</p>
-        <p>At Safran Aircraft Engines, I research AI solutions to real operational problems: I frame the question, compare approaches on real data and ship what holds up. Outside work, I solve a machine-learning problem every day from the mathematics up and run my own experiments, such as uncertainty-aware remaining-useful-life prediction for turbofan engines. Hackathons come second, as a place to test ideas against a deadline; <strong>Legible</strong> won the Mistral × Stanford Law School hackathon.</p>
+        <p>At Safran Aircraft Engines, I build and evaluate LLM agents for real operational problems: I frame the use case, compare approaches on real data and ship what holds up. Outside work, I solve a machine-learning problem every day from the mathematics up and run my own experiments, such as uncertainty-aware remaining-useful-life prediction for turbofan engines. Hackathons come second, as a place to test ideas against a deadline; <strong>Legible</strong> won the Mistral × Stanford Law School hackathon.</p>
       </div>
     </div>
 
