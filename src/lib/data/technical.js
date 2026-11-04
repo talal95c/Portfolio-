@@ -1,6 +1,31 @@
 // Technical section of each /work page: a short explanation of my part and a flow diagram.
 // stages run top to bottom; nodes inside a `flow` stage run left to right.
 export const technical = {
+  'pulse-deepfake': {
+    title: `From pixel light to biological pulse`,
+    paragraphs: [
+      `The pipeline operates on 10-second facial video clips at 30 fps. Facial landmarks isolate skin regions of interest (forehead and cheeks) using motion compensation to mitigate head movement. Simultaneously, an ambient background region is sampled to establish an illumination baseline.`,
+      `Pixel channels are aggregated per frame into temporal RGB traces. Algorithms like CHROM (chrominance-based) and POS (Plane-Orthogonal-to-Skin) project these color variations onto a subspace orthogonal to skin-tone drift, isolating the subtle blood-volume pulse (BVP).`,
+      `To eliminate environmental flicker and lighting shifts, Fast Fourier Transforms (FFT) are computed for both facial and background signals. Subtracting the background spectrum isolates authentic physiological frequencies (0.7–3.0 Hz, 42–180 BPM). Synthetic faces lack spatial-temporal phase synchrony, exposing forgeries through flattened or disordered spectrograms.`,
+    ],
+    stages: [
+      { flow: true, nodes: [
+        { label: `RGB Video input`, note: `10 s window · 30 fps`, tag: `data` },
+        { label: `Motion compensation`, note: `face landmark tracking & alignment`, tag: `code` },
+        { label: `ROI segmentation`, note: `forehead + cheeks vs background`, tag: `code` },
+      ] },
+      { flow: true, nodes: [
+        { label: `Face rPPG`, note: `CHROM / POS skin projection`, tag: `signal`, accent: true },
+        { label: `Background rPPG`, note: `ambient illumination baseline`, tag: `signal` },
+      ] },
+      { flow: true, nodes: [
+        { label: `Dual FFT`, note: `fast fourier transform`, tag: `signal` },
+        { label: `Spectral subtraction`, note: `Face FFT − Background FFT`, tag: `signal`, accent: true },
+        { label: `Differential spectrogram`, note: `noise-cancelled frequency map`, tag: `data` },
+      ] },
+      { nodes: [{ label: `BVP Verification & Heart Rate`, note: `Periodic coherence check → Real vs Deepfake verdict`, tag: `model`, accent: true }] },
+    ],
+  },
   'turbofan-rul': {
     title: `Method and findings`,
     paragraphs: [

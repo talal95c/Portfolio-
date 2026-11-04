@@ -174,6 +174,22 @@ export const media = {
     tone: "dark",
     card: {"src": "/work/miropolis/miropolis_screenshot_2_card.webp", "width": 801, "height": 544},
   },
+  "/work/pulse-deepfake/pulse_cover.webp": {
+    src: "/work/pulse-deepfake/pulse_cover.webp",
+    hash: "71b7677b56be",
+    width: 1024,
+    height: 520,
+    tone: "light",
+    card: {"src": "/work/pulse-deepfake/pulse_cover_card.webp", "width": 1024, "height": 520},
+  },
+  "/work/pulse-deepfake/pulse_pipeline.webp": {
+    src: "/work/pulse-deepfake/pulse_pipeline.webp",
+    hash: "89c0cdef55ec",
+    width: 1024,
+    height: 403,
+    tone: "light",
+    card: {"src": "/work/pulse-deepfake/pulse_pipeline_card.webp", "width": 995, "height": 376},
+  },
   "/work/sylo/sylo_cover.webp": {
     src: "/work/sylo/sylo_cover_trim.webp",
     hash: "70f245a9f683",
