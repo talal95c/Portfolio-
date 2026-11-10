@@ -4,7 +4,7 @@
   const stats = [
     { value: 'Top 5%', label: 'engineering cycle, CY Tech', tint: '#eeebfa' },
     { value: '3 years', label: 'AI apprenticeship at Safran', tint: '#e8f1fb' },
-    { value: '4', label: 'hackathon podiums', tint: '#fdeee6' },
+    { value: '5', label: 'hackathon awards', tint: '#fdeee6' },
     { value: '14.8K', label: 'followers on TikTok', tint: '#e9f6ee' }
   ];
 
@@ -90,7 +90,7 @@
     <div class="block" style="--i: 2">
       <div class="bio">
         <p>After two years of integrated prépa at CY Tech, I joined the computer science engineering cycle, where I rank in the top 5%.</p>
-        <p>At Safran Aircraft Engines, I research AI solutions to real operational problems: I frame the question, compare approaches on real data and ship what holds up. Outside work, I solve a machine-learning problem every day from the mathematics up and run my own experiments, such as uncertainty-aware remaining-useful-life prediction for turbofan engines. Hackathons come second, as a place to test ideas against a deadline; <strong>Legible</strong> won the Mistral × Stanford Law School hackathon.</p>
+        <p>At Safran Aircraft Engines, I research AI solutions to real operational problems: I frame the question, compare approaches on real data and ship what holds up. Outside work, I solve a machine-learning problem every day from the mathematics up and build my own experiments, such as Rio, which guides learners inside their own software. Hackathons come second, as a place to test ideas against a deadline; <strong>Legible</strong> won the Mistral × Stanford Law School hackathon.</p>
       </div>
     </div>
 

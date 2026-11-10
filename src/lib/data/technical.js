@@ -26,25 +26,29 @@ export const technical = {
       { nodes: [{ label: `BVP Verification & Heart Rate`, note: `Periodic coherence check → Real vs Deepfake verdict`, tag: `model`, accent: true }] },
     ],
   },
-  'turbofan-rul': {
-    title: `Method and findings`,
+  rio: {
+    title: `From tutorial to verified milestones`,
     paragraphs: [
-      `Targets follow the standard convention: RUL capped at 125 cycles, since degradation is invisible early in life. On the multi-condition subsets, the six flight regimes are recovered with k-means on the operating settings and every sensor is z-scored within its regime. That single step removes most of the difficulty of FD002 and FD004.`,
-      `Each of the five CNN members predicts a mean μ and a variance σ², trained on the Gaussian negative log-likelihood ½ log σ² + (y − μ)² / 2σ². Across the ensemble, the variance splits into an __aleatoric__ part (the mean of σ²: what the sensors cannot resolve) and an __epistemic__ part (the spread of μ across members: what the model does not know).`,
-      `Finding: **gradient boosting on four statistics per sensor beats the CNN on all four subsets** (12.4–14.1 vs. 13.6–16.5 RMSE), even without the elapsed-cycle feature. What the deep ensemble adds is calibration: its 90 % intervals hold at 88–93 %, and its uncertainty rises with the actual error (Spearman ρ up to 0.56 on FD004).`,
+      `We built Rio together across product, AI and the desktop app. React provides the floating bar, cursor and notch; Tauri / Rust handles the native tutor, screen capture and autopilot. Holo by H Company analyzes screenshots and plans milestones that can be checked on screen rather than relying on fixed coordinates.`,
+      `YouTube links use Gladia transcription before Holo prepares the lesson. Web pages supply their text, with H Company's web-surfer agent when needed. Questions search the team's knowledge base, then Linkup if configured; Phonon synthesizes speech locally. A Cloudflare Worker connects the website, team console, API and D1.`,
+      `After a successful lesson, the learner can explicitly accept or decline autopilot and stop it at any time. Rio reuses milestones and checks outcomes on fresh screenshots before reporting success. The app targets macOS; autopilot also works on Linux X11, not Wayland. Pointing accuracy and vague requests remain limitations, so not every task is guaranteed to succeed.`,
     ],
     stages: [
       { flow: true, nodes: [
-        { label: `Sensor streams`, note: `14 sensors × cycles, per engine`, tag: `data` },
-        { label: `Regime normalisation`, note: `k-means on settings, z-score per regime`, tag: `code` },
-        { label: `Windows`, note: `last 30 cycles, RUL ≤ 125`, tag: `code` },
+        { label: `Tutorial or goal`, note: `YouTube · web page · library`, tag: `data` },
+        { label: `Prepare milestones`, note: `Gladia transcription + Holo planning`, tag: `AI`, accent: true },
       ] },
       { flow: true, nodes: [
-        { label: `Ridge`, note: `flattened window`, tag: `baseline` },
-        { label: `Gradient boosting`, note: `last, mean, std, slope per sensor`, tag: `baseline` },
-        { label: `CNN ensemble`, note: `5 seeds, outputs μ and σ²`, tag: `model`, accent: true },
+        { label: `Desktop guidance`, note: `React overlay · Tauri / Rust`, tag: `app` },
+        { label: `Screen checks`, note: `Holo verifies each milestone`, tag: `AI`, accent: true },
+        { label: `Questions`, note: `Voice / text · knowledge + Linkup`, tag: `search` },
       ] },
-      { nodes: [{ label: `Evaluation`, note: `RMSE · NASA score · 90 % coverage, test set used once`, tag: `metrics` }] },
+      { flow: true, nodes: [
+        { label: `Successful run`, note: `Reusable milestones`, tag: `data` },
+        { label: `Explicit consent`, note: `Accept, decline or stop`, tag: `app`, accent: true },
+        { label: `Autopilot`, note: `Fresh screenshots verify outcomes`, tag: `AI` },
+      ] },
+      { nodes: [{ label: `Team console and API`, note: `Cloudflare Worker · D1 · knowledge service`, tag: `cloud` }] },
     ],
   },
   legible: {

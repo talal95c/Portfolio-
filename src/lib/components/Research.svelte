@@ -153,9 +153,9 @@
     <div class="projects">
       <h3>Research projects</h3>
       <div class="project-grid">
-        <a class="project-card" href="/work/turbofan-rul">
-          <span class="project-title">Turbofan RUL</span>
-          <span class="project-description">Uncertainty-aware remaining useful life on NASA C-MAPSS</span>
+        <a class="project-card" href="/work/pulse-deepfake">
+          <span class="project-title">Pulse</span>
+          <span class="project-description">Can a camera see a heartbeat that a deepfake cannot fake?</span>
         </a>
         <a class="project-card" href="/work/legible">
           <span class="project-title">Legible</span>
