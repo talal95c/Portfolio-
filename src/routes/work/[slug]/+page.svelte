@@ -21,7 +21,7 @@
   let projectMedia = $derived(workMedia(project));
   let heroImage = $derived(projectMedia[0]);
   let gallery = $derived(
-    technicalContent || caseStudy.gallery === false
+    (technicalContent && caseStudy.gallery !== true) || caseStudy.gallery === false
       ? []
       : projectMedia.slice(1).map((image, index) => ({ ...image, index }))
   );
