@@ -26,7 +26,7 @@
       title: 'Awards',
       items: [
         { years: '2026', company: 'Mistral × Stanford Law', role: 'Winner', emoji: 'trophy', note: 'Legible, plus the Legora track.' },
-        { years: '2026', company: 'H Company', role: '2nd place', emoji: 'medal', note: 'Rio, €3,000 prize.' },
+        { years: '2026', company: 'H Company × Stripe', role: '2nd place', emoji: 'medal', note: 'Rio, €3,000 prize.' },
         { years: '2026', company: 'IBM × Airbus', role: 'Top Score', emoji: 'gold' },
         { years: '2026', company: 'French National Assembly', role: 'Top Project', emoji: 'medal' },
         { years: '2026', company: 'Anthropic × Hugging Face', role: 'Top 20 / 300', emoji: 'medal' }
