@@ -207,7 +207,7 @@ export const projects = [
       role: `Hackathon participant`,
       team: `Multiple hackathon teams`,
       skills: `AI, engineering, product development`,
-      context: `Hackathons are where I test research ideas against a deadline. 2nd place — H Company (Rio), with a €3,000 prize in Paris. With Legible I won the Mistral × Stanford Law School hackathon and its Legora track; I also earned Top Score at the IBM × Airbus hackathon at Télécom Paris, Top Project at the French National Assembly hackathon, and Top 20 out of 300 at the Anthropic × Hugging Face hackathon.`,
+      context: `Hackathons are where I test research ideas against a deadline. With Rio we took 2nd place and €3,000 at the H Company hackathon in Paris. With Legible I won the Mistral × Stanford Law School hackathon and its Legora track; I also earned Top Score at the IBM × Airbus hackathon at Télécom Paris, Top Project at the French National Assembly hackathon, and Top 20 out of 300 at the Anthropic × Hugging Face hackathon.`,
       goal: `Turn a research idea into a working, measured prototype in a weekend, with a team.`,
       results: [
         { value: `5`, label: `Competitions` },
