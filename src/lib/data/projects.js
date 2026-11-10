@@ -3,6 +3,7 @@ export const projects = [
     name: `Rio`,
     slug: `rio`,
     featured: true,
+    sticker: `medal`,
     website: `https://rio.vignemale.com`,
     description: `Paste a tutorial; __Rio guides you inside your own software__ with an overlaid cursor, on-screen step checks and voice or text questions. It can redo the task with your consent. **2nd place, €3,000** at the Hackathon by H Company.`,
     date: `Nov 2026`,
@@ -10,6 +11,7 @@ export const projects = [
     images: [
       `/work/rio/rio_cover.webp`,
       `/work/rio/blender-material-tab.webp`,
+      `/work/rio/rio_podium.webp`,
     ],
     caseStudy: {
       color: `#ffe1cc`,
