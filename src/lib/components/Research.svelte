@@ -153,9 +153,9 @@
     <div class="projects">
       <h3>Research projects</h3>
       <div class="project-grid">
-        <a class="project-card" href="/work/pulse-deepfake">
-          <span class="project-title">Pulse</span>
-          <span class="project-description">Can a camera see a heartbeat that a deepfake cannot fake?</span>
+        <a class="project-card" href="/work/vitaldb-alarm">
+          <span class="project-title">VitalDB</span>
+          <span class="project-description">Does a good AUROC make a good alarm?</span>
         </a>
         <a class="project-card" href="/work/legible">
           <span class="project-title">Legible</span>

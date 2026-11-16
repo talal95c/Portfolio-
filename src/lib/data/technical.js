@@ -1,29 +1,30 @@
 // Technical section of each /work page: a short explanation of my part and a flow diagram.
 // stages run top to bottom; nodes inside a `flow` stage run left to right.
 export const technical = {
-  'pulse-deepfake': {
-    title: `From pixel light to biological pulse`,
+  'vitaldb-alarm': {
+    title: `From arterial pressure to an alarm`,
     paragraphs: [
-      `The pipeline operates on 10-second facial video clips at 30 fps. Facial landmarks isolate skin regions of interest (forehead and cheeks) using motion compensation to mitigate head movement. Simultaneously, an ambient background region is sampled to establish an illumination baseline.`,
-      `Pixel channels are aggregated per frame into temporal RGB traces. Algorithms like CHROM (chrominance-based) and POS (Plane-Orthogonal-to-Skin) project these color variations onto a subspace orthogonal to skin-tone drift, isolating the subtle blood-volume pulse (BVP).`,
-      `To eliminate environmental flicker and lighting shifts, Fast Fourier Transforms (FFT) are computed for both facial and background signals. Subtracting the background spectrum isolates authentic physiological frequencies (0.7–3.0 Hz, 42–180 BPM). Synthetic faces lack spatial-temporal phase synchrony, exposing forgeries through flattened or disordered spectrograms.`,
+      `Each case's invasive MAP track (Solar8000/ART_MBP) is cleaned and resampled per minute. For every eligible minute, the features are the last MAP, 5- and 10-minute means, the 5-minute slope and age; the label is the onset of MAP < 65 mmHg within the next five minutes.`,
+      `Patients, not minutes, are split 60 / 20 / 20 with seed 42: a shuffled minute split puts all 283 patients in both train and validation. A standardised logistic regression is compared with the baseline −MAP. The threshold is the validation quantile that rings about once per hour, then frozen for test.`,
+      `On 58 test patients the model ranks as well as the last MAP (AUROC 0.833 vs 0.834) but catches only 40 % of episodes at 1.14 alarms/h with 57 % precision. A patient bootstrap (1,000 draws) gives wide intervals, the women − men sensitivity gap (+6.6 points) has a CI of [−5.3, +22.0], and calibration is good on average (7.4 % predicted vs 7.9 % observed, Brier 0.062) but underestimates the top-risk decile (0.27 vs 0.36).`,
     ],
     stages: [
       { flow: true, nodes: [
-        { label: `RGB Video input`, note: `10 s window · 30 fps`, tag: `data` },
-        { label: `Motion compensation`, note: `face landmark tracking & alignment`, tag: `code` },
-        { label: `ROI segmentation`, note: `forehead + cheeks vs background`, tag: `code` },
+        { label: `VitalDB cases`, note: `300 adults · arterial line`, tag: `data` },
+        { label: `MAP cleaning`, note: `per-minute track`, tag: `code` },
+        { label: `Features & labels`, note: `MAP 1/5/10 min, slope · onset < 65 in 5 min`, tag: `data` },
       ] },
       { flow: true, nodes: [
-        { label: `Face rPPG`, note: `CHROM / POS skin projection`, tag: `signal`, accent: true },
-        { label: `Background rPPG`, note: `ambient illumination baseline`, tag: `signal` },
+        { label: `Patient split`, note: `169 / 56 / 58`, tag: `code` },
+        { label: `Baseline −MAP`, note: `last pressure only`, tag: `model` },
+        { label: `Logistic regression`, tag: `model`, accent: true },
       ] },
       { flow: true, nodes: [
-        { label: `Dual FFT`, note: `fast fourier transform`, tag: `signal` },
-        { label: `Spectral subtraction`, note: `Face FFT − Background FFT`, tag: `signal`, accent: true },
-        { label: `Differential spectrogram`, note: `noise-cancelled frequency map`, tag: `data` },
+        { label: `Frozen threshold`, note: `≈1 alarm/h on validation`, tag: `model`, accent: true },
+        { label: `Episode sensitivity`, note: `alarms/h · precision`, tag: `eval` },
+        { label: `Bootstrap & calibration`, note: `CI · women/men · Brier`, tag: `eval` },
       ] },
-      { nodes: [{ label: `BVP Verification & Heart Rate`, note: `Periodic coherence check → Real vs Deepfake verdict`, tag: `model`, accent: true }] },
+      { nodes: [{ label: `Verdict`, note: `Good AUROC, but 60 % of episodes missed`, tag: `eval`, accent: true }] },
     ],
   },
   rio: {
