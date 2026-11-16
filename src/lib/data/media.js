@@ -262,14 +262,6 @@ export const media = {
     tone: "light",
     card: {"src": "/work/vitaldb-alarm/vitaldb_cover_card.webp", "width": 1345, "height": 928},
   },
-  "/work/vitaldb-alarm/vitaldb_explorer.webp": {
-    src: "/work/vitaldb-alarm/vitaldb_explorer_trim.webp",
-    hash: "bffdf6db19f5",
-    width: 1408,
-    height: 1800,
-    tone: "light",
-    card: {"src": "/work/vitaldb-alarm/vitaldb_explorer_card.webp", "width": 1321, "height": 1705},
-  },
   "/work/vitaldb-alarm/vitaldb_results.webp": {
     src: "/work/vitaldb-alarm/vitaldb_results_trim.webp",
     hash: "d46afd5192f3",

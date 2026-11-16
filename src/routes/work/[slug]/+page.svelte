@@ -220,11 +220,6 @@
                 {/if}
               {/each}
             </p>
-            {#if project.website && project.websiteLabel}
-              <a class="project-link" href={project.website} target="_blank" rel="noopener noreferrer">
-                {project.websiteLabel} <span aria-hidden="true">↗</span>
-              </a>
-            {/if}
           </header>
 
           <dl class="meta-list">
@@ -244,7 +239,7 @@
               <dt>Skills</dt>
               <dd>{caseStudy.skills}</dd>
             </div>
-            {#if project.website && !project.websiteLabel}
+            {#if project.website}
               <div class="meta-row">
                 <dt>Live project</dt>
                 <dd>
@@ -261,7 +256,6 @@
           <div
             class="hero-media media-frame reveal"
             class:media-alpha={heroImage.alpha}
-            class:media-frameless={heroImage.frameless}
           >
             <img
               src={heroImage.src}
@@ -315,7 +309,6 @@
                 <button
                   class="gallery-item media-frame reveal"
                   class:media-alpha={image.alpha}
-                  class:media-frameless={image.frameless}
                   type="button"
                   aria-label={`Open image ${image.index + 1} of ${gallery.length}`}
                   onclick={(event) => openLightbox(image.index, event)}
@@ -565,15 +558,6 @@
     text-decoration-color: rgb(0 0 0 / 0.3);
   }
 
-  .project-link {
-    display: inline-block;
-    margin-top: 24px;
-    font-size: 17.6px;
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 4px;
-  }
-
   .meta-list {
     margin: 40px 0 0;
     padding: 0;
@@ -656,19 +640,6 @@
     box-shadow:
       0 1px 2px rgba(0, 0, 0, 0.04),
       0 12px 32px rgba(0, 0, 0, 0.07);
-  }
-
-  .media-frame.media-frameless {
-    aspect-ratio: auto;
-    border-radius: 0;
-    background: transparent;
-  }
-
-  .media-frame.media-frameless img {
-    width: 100%;
-    max-height: none;
-    border-radius: 0;
-    box-shadow: none;
   }
 
   .story-block {
@@ -840,9 +811,7 @@
     }
 
     .gallery-item.media-alpha:hover img,
-    .gallery-item.media-alpha:focus-visible img,
-    .gallery-item.media-frameless:hover img,
-    .gallery-item.media-frameless:focus-visible img {
+    .gallery-item.media-alpha:focus-visible img {
       transform: none;
     }
 
