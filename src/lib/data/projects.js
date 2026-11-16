@@ -43,10 +43,10 @@ export const projects = [
     },
   },
   {
-    name: `VitalDB`,
+    name: `A good AUROC is not a good alarm`,
     slug: `vitaldb-alarm`,
     featured: true,
-    description: `Does a good AUROC make a good alarm? Predicting __intraoperative hypotension__ five minutes ahead on VitalDB: **AUROC 0.83, yet only 40 % of episodes caught** at about one alarm per hour.`,
+    description: `Predicting __intraoperative hypotension__ five minutes ahead on VitalDB: **AUROC 0.83, yet only 40 % of episodes caught** at about one alarm per hour.`,
     date: `Nov 2026`,
     tags: [`Clinical ML`, `Evaluation`, `Calibration`],
     images: [

@@ -154,8 +154,8 @@
       <h3>Research projects</h3>
       <div class="project-grid">
         <a class="project-card" href="/work/vitaldb-alarm">
-          <span class="project-title">VitalDB</span>
-          <span class="project-description">Does a good AUROC make a good alarm?</span>
+          <span class="project-title">A good AUROC is not a good alarm</span>
+          <span class="project-description">Predicting intraoperative hypotension on VitalDB</span>
         </a>
         <a class="project-card" href="/work/legible">
           <span class="project-title">Legible</span>
