@@ -201,7 +201,7 @@
         <aside class="project-sidebar" aria-label={`${project.name} project details`}>
           <header class="project-heading">
             <p class="project-index">{projectNumber} / {projectCount}</p>
-            <h1 aria-label={project.name} class:long-title={longestTitleWord > 10}>
+            <h1 aria-label={project.name} class:long-title={longestTitleWord > 10 || project.name.length > 24}>
               {#each titleWords as word, index (index)}
                 <span class="title-mask" aria-hidden="true">
                   <span class="title-word" style={`--word-index:${index}`}>{word}</span>
@@ -508,6 +508,7 @@
     letter-spacing: -0.03em;
     line-height: 1;
     text-transform: uppercase;
+    text-wrap: balance;
   }
 
   .project-heading h1.long-title {
