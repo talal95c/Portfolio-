@@ -2,15 +2,16 @@
 // stages run top to bottom; nodes inside a `flow` stage run left to right.
 export const technical = {
   'vitaldb-alarm': {
-    title: `From arterial pressure to an alarm`,
+    title: `Method and measured result`,
     paragraphs: [
-      `Each case's invasive MAP track (Solar8000/ART_MBP) is cleaned and resampled per minute. For every eligible minute, the features are the last MAP, 5- and 10-minute means, the 5-minute slope and age; the label is the onset of MAP < 65 mmHg within the next five minutes.`,
-      `Patients, not minutes, are split 60 / 20 / 20 with seed 42: a shuffled minute split puts all 283 patients in both train and validation. A standardised logistic regression is compared with the baseline −MAP. The threshold is the validation quantile that rings about once per hour, then frozen for test.`,
-      `On 58 test patients the model ranks as well as the last MAP (AUROC 0.833 vs 0.834) but catches only 40 % of episodes at 1.14 alarms/h with 57 % precision. A patient bootstrap (1,000 draws) gives wide intervals, the women − men sensitivity gap (+6.6 points) has a CI of [−5.3, +22.0], and calibration is good on average (7.4 % predicted vs 7.9 % observed, Brier 0.062) but underestimates the top-risk decile (0.27 vs 0.36).`,
+      `I cleaned the invasive MAP track (Solar8000/ART_MBP) and resampled it per minute, retaining 283 surgeries. Features use recent MAP history, the five-minute slope and age; the target is MAP < 65 mmHg within the next five minutes.`,
+      `Patients, not minutes, are split 60 / 20 / 20 with seed 42. I fit standardised logistic regression on training patients, compare it with a current-MAP baseline and freeze the alarm threshold on validation before evaluating test patients. A separate row-level split leakage experiment checks how shuffled minutes allow patients to overlap between training and validation.`,
+      `Measured result: on 58 held-out test patients, AUROC is 0.833 versus 0.834 for the current-MAP baseline. At the validation-fixed threshold, the model produces 1.14 alarms/hour with 56.6 % precision and detects 40.1 % of 212 episodes. Ranking performance alone does not establish a useful alarm.`,
+      `Patient-bootstrap uncertainty tempers the subgroup comparison: the women-minus-men episode-sensitivity gap confidence interval includes zero. Calibration underestimates risk in the top decile. These checks, alongside the row-level leakage experiment, are exposed in a React / Vite / TypeScript results page with a case replay and manual risk explorer.`,
     ],
     stages: [
       { flow: true, nodes: [
-        { label: `VitalDB cases`, note: `300 adults · arterial line`, tag: `data` },
+        { label: `VitalDB cohort`, note: `283 surgeries · invasive MAP`, tag: `data` },
         { label: `MAP cleaning`, note: `per-minute track`, tag: `code` },
         { label: `Features & labels`, note: `MAP 1/5/10 min, slope · onset < 65 in 5 min`, tag: `data` },
       ] },
